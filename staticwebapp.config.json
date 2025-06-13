@@ -6,6 +6,17 @@
     "mimeTypes": {
         ".json": "text/json",
         ".js": "application/javascript",
-        ".mjs": "application/javascript"
-    }
+        ".mjs": "application/javascript",
+        ".cjs": "application/javascript",
+        ".jsx": "application/javascript",
+        ".ts": "application/javascript",
+        ".tsx": "application/javascript"
+    },
+    "routes": [
+        {
+            "route": "/*",
+            "serve": "/index.html",
+            "statusCode": 200
+        }
+    ]
 }
