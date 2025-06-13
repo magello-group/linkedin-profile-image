@@ -55,7 +55,6 @@ function App() {
           const textMetrics = ctx.measureText(text)
 
           // Calculate background dimensions with fixed minimum size
-          const verticalPadding = Math.round(fontSize * 0.2)
           const horizontalPadding = Math.round(fontSize * 0.6) // Approximately one character width
           const minWidth = Math.round(fontSize * 4)
           const bgWidth = Math.max(textMetrics.width + horizontalPadding * 2, minWidth)
