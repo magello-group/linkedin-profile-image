@@ -49,16 +49,17 @@ function App() {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 
         if (text) {
-          // Calculate text size as 20% of image height
+          // Set a fixed initial font size
           const fontSize = Math.round(img.height * 0.20)
           ctx.font = `${fontSize}px KattuxAbc`
           const textMetrics = ctx.measureText(text)
 
-          // Calculate background dimensions
-          const padding = Math.round(fontSize * 0.1) // Padding reduced to 10% of font size
-          const minWidth = Math.round(fontSize * 4) // Minimum width relative to font size
-          const bgWidth = Math.max(textMetrics.width + padding * 2, minWidth)
-          const bgHeight = (bgWidth * 51) / 196 // Maintain aspect ratio of background SVG
+          // Calculate background dimensions with fixed minimum size
+          const verticalPadding = Math.round(fontSize * 0.2)
+          const horizontalPadding = Math.round(fontSize * 0.6) // Approximately one character width
+          const minWidth = Math.round(fontSize * 4)
+          const bgWidth = Math.max(textMetrics.width + horizontalPadding * 2, minWidth)
+          const bgHeight = (bgWidth * 51) / 196
 
           // Calculate position to center the text in the background
           const bgX = canvas.width / 2 - bgWidth / 2 + position.x
@@ -68,13 +69,18 @@ function App() {
           ctx.drawImage(bgImage, bgX, bgY, bgWidth, bgHeight)
 
           // Draw text
-          ctx.font = '32px KattuxAbc'
+          ctx.font = `${fontSize}px KattuxAbc`
           ctx.fillStyle = 'white'
           ctx.textAlign = 'center'
           ctx.textBaseline = 'middle'
           ctx.save()
           ctx.translate(canvas.width / 2 + position.x, canvas.height / 2 + position.y)
           ctx.rotate(-2 * Math.PI / 180) // -2 degrees in radians
+          // Add shadow
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.5)'
+          ctx.shadowBlur = 2
+          ctx.shadowOffsetX = 1
+          ctx.shadowOffsetY = 1
           ctx.fillText(text, 0, 0)
           ctx.restore()
         }
