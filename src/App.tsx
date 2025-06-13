@@ -49,13 +49,14 @@ function App() {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 
         if (text) {
-          // Set up text style
-          ctx.font = '32px KattuxAbc'
+          // Calculate text size as 20% of image height
+          const fontSize = Math.round(img.height * 0.20)
+          ctx.font = `${fontSize}px KattuxAbc`
           const textMetrics = ctx.measureText(text)
 
           // Calculate background dimensions
-          const padding = 40 // Increased padding for better visual appearance
-          const minWidth = 200 // Minimum width for the background
+          const padding = Math.round(fontSize * 0.1) // Padding reduced to 10% of font size
+          const minWidth = Math.round(fontSize * 4) // Minimum width relative to font size
           const bgWidth = Math.max(textMetrics.width + padding * 2, minWidth)
           const bgHeight = (bgWidth * 51) / 196 // Maintain aspect ratio of background SVG
 
