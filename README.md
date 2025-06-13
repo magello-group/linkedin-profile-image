@@ -1,54 +1,65 @@
-# React + TypeScript + Vite
+# LinkedIn Profilbildsgenerator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+En webbapplikation som låter dig skapa professionella LinkedIn-profilbilder med anpassad text. Perfekt för att skapa profilbilder med ditt namn eller företagsinformation.
 
-Currently, two official plugins are available:
+## Funktioner
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Ladda upp din egen profilbild
+- Lägg till anpassad text
+- Realtidsförhandsvisning av resultatet
+- Ladda ner den genererade bilden
+- Responsiv design
+- Modernt och rent användargränssnitt
 
-## Expanding the ESLint configuration
+## Kom igång
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Förutsättningar
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+- Node.js (version 14 eller högre)
+- npm eller yarn
+
+### Installation
+
+1. Klona repositoryt:
+```bash
+git clone [repository-url]
+cd linkedin-profile-image
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+2. Installera beroenden:
+```bash
+npm install
+# eller
+yarn install
 ```
+
+3. Starta utvecklingsservern:
+```bash
+npm start
+# eller
+yarn start
+```
+
+Applikationen öppnas i din standardwebbläsare på `http://localhost:3000`.
+
+## Användning
+
+1. Klicka på "Välj fil" för att ladda upp din profilbild
+2. Ange den text du vill ha överlagrad på din bild
+3. Förhandsgranska resultatet i realtid
+4. Klicka på "Ladda ner bild" för att spara din genererade bild
+
+## Använda teknologier
+
+- React
+- TypeScript
+- HTML5 Canvas
+- CSS3
+
+## Licens
+
+Detta projekt är licensierat under MIT-licensen - se LICENSE-filen för detaljer.
+
+## Bidra
+
+Bidrag är välkomna! Tveka inte att skicka in en Pull Request.
