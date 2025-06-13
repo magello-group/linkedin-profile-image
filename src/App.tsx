@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import './App.css'
 
+// Define the font face
+const fontFace = new FontFace('KattuxAbc', 'url(/KattuxAbc-Regular.otf)')
+
 function App() {
   const [image, setImage] = useState<string | null>(null)
   const [text, setText] = useState('')
@@ -8,9 +11,30 @@ function App() {
   const [isDragging, setIsDragging] = useState(false)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+  const [bgImage, setBgImage] = useState<HTMLImageElement | null>(null)
+  const [fontLoaded, setFontLoaded] = useState(false)
+
+  // Load font
+  useEffect(() => {
+    fontFace.load().then((loadedFont) => {
+      document.fonts.add(loadedFont)
+      setFontLoaded(true)
+    }).catch(error => {
+      console.error('Error loading font:', error)
+    })
+  }, [])
+
+  // Load background image once
+  useEffect(() => {
+    const img = new Image()
+    img.onload = () => {
+      setBgImage(img)
+    }
+    img.src = '/label-background.svg'
+  }, [])
 
   useEffect(() => {
-    if (image && canvasRef.current) {
+    if (image && canvasRef.current && bgImage && fontLoaded) {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
       if (!ctx) return
@@ -24,20 +48,39 @@ function App() {
         // Draw background
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 
-        // Draw text
-        ctx.font = '48px Arial'
-        ctx.fillStyle = 'white'
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
-        ctx.save()
-        ctx.translate(canvas.width / 2 + position.x, canvas.height / 2 + position.y)
-        ctx.rotate(-2 * Math.PI / 180) // -2 degrees in radians
-        ctx.fillText(text, 0, 0)
-        ctx.restore()
+        if (text) {
+          // Set up text style
+          ctx.font = '32px KattuxAbc'
+          const textMetrics = ctx.measureText(text)
+
+          // Calculate background dimensions
+          const padding = 40 // Increased padding for better visual appearance
+          const minWidth = 200 // Minimum width for the background
+          const bgWidth = Math.max(textMetrics.width + padding * 2, minWidth)
+          const bgHeight = (bgWidth * 51) / 196 // Maintain aspect ratio of background SVG
+
+          // Calculate position to center the text in the background
+          const bgX = canvas.width / 2 - bgWidth / 2 + position.x
+          const bgY = canvas.height / 2 - bgHeight / 2 + position.y
+
+          // Draw the background SVG
+          ctx.drawImage(bgImage, bgX, bgY, bgWidth, bgHeight)
+
+          // Draw text
+          ctx.font = '32px KattuxAbc'
+          ctx.fillStyle = 'white'
+          ctx.textAlign = 'center'
+          ctx.textBaseline = 'middle'
+          ctx.save()
+          ctx.translate(canvas.width / 2 + position.x, canvas.height / 2 + position.y)
+          ctx.rotate(-2 * Math.PI / 180) // -2 degrees in radians
+          ctx.fillText(text, 0, 0)
+          ctx.restore()
+        }
       }
       img.src = image
     }
-  }, [image, text, position])
+  }, [image, text, position, bgImage, fontLoaded])
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
