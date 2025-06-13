@@ -49,12 +49,25 @@ Applikationen öppnas i din standardwebbläsare på `http://localhost:3000`.
 3. Förhandsgranska resultatet i realtid
 4. Klicka på "Ladda ner bild" för att spara din genererade bild
 
+## Deployment
+
+Applikationen är konfigurerad för automatisk deployment till Azure Static Web Apps. Varje push till main-branchen triggar en ny deployment.
+
+### Deployment Process
+
+1. Skapa en Azure Static Web App i Azure Portal
+2. Lägg till följande hemlighet i GitHub repository:
+   - `AZURE_STATIC_WEB_APPS_API_TOKEN`: Din Azure Static Web Apps API-token
+3. Pusha till main-branchen för att trigga deployment
+
 ## Använda teknologier
 
 - React
 - TypeScript
 - HTML5 Canvas
 - CSS3
+- Azure Static Web Apps
+- GitHub Actions
 
 ## Licens
 
