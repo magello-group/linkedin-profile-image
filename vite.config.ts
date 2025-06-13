@@ -25,7 +25,10 @@ export default defineConfig({
     },
     sourcemap: true,
     minify: 'terser',
-    target: 'es2015'
+    target: 'es2015',
+    modulePreload: {
+      polyfill: true
+    }
   },
   base: '/',
   publicDir: 'public',
