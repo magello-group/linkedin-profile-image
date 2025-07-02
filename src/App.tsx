@@ -130,6 +130,7 @@ function App() {
 
   return (
     <div className="app">
+      <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
       <h1>LinkedIn Profilbildsgenerator</h1>
       <p className="description">
         Ladda upp din profilbild och lägg till text som kommer att visas överlagrad på bilden.
