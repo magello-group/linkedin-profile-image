@@ -6,8 +6,11 @@ En webbapplikation som låter dig skapa professionella LinkedIn-profilbilder med
 
 - Ladda upp din egen profilbild
 - Lägg till anpassad text
+- Välj bland standardtexter (t.ex. "Anställer!", "Tillgänglig!", "Fullstack", "Konsult")
+- Justera textstorleken med ett reglage
 - Realtidsförhandsvisning av resultatet
-- Ladda ner den genererade bilden
+- Ladda ner den genererade bilden (med ikon på knappen)
+- Hover-effekter på formulärfält för bättre användarupplevelse
 - Responsiv design
 - Modernt och rent användargränssnitt
 
@@ -45,9 +48,10 @@ Applikationen öppnas i din standardwebbläsare på `http://localhost:3000`.
 ## Användning
 
 1. Klicka på "Välj fil" för att ladda upp din profilbild
-2. Ange den text du vill ha överlagrad på din bild
-3. Förhandsgranska resultatet i realtid
-4. Klicka på "Ladda ner bild" för att spara din genererade bild
+2. Ange den text du vill ha överlagrad på din bild, eller välj en av standardtexterna genom att klicka på någon av förslagsknapparna
+3. Justera textstorleken med reglaget om du vill
+4. Förhandsgranska resultatet i realtid
+5. Klicka på "Ladda ner bild" (med nedladdningsikon) för att spara din genererade bild
 
 ## Deployment
 
