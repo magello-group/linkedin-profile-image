@@ -156,10 +156,12 @@ function App() {
           />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', justifyContent: 'center' }}>
             <span style={{ fontSize: '0.95rem', color: '#666', marginBottom: 2 }}>Standardtexter (förslag):</span>
-            <button type="button" style={{ marginBottom: 2 }} onClick={() => setText('Anställer!')}>Anställer!</button>
-            <button type="button" style={{ marginBottom: 2 }} onClick={() => setText('Tillgänglig!')}>Tillgänglig!</button>
-            <button type="button" style={{ marginBottom: 2 }} onClick={() => setText('Tillgänglig!')}>Fullstack</button>
-            <button type="button" onClick={() => setText('Konsult')}>Konsult</button>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', marginTop: 2 }}>
+              <button type="button" style={{ fontSize: '0.85rem', padding: '0.25rem 0.7rem', borderRadius: 6, border: '1px solid #ccc', background: '#fafafa', cursor: 'pointer' }} onClick={() => setText('Anställer!')}>Anställer!</button>
+              <button type="button" style={{ fontSize: '0.85rem', padding: '0.25rem 0.7rem', borderRadius: 6, border: '1px solid #ccc', background: '#fafafa', cursor: 'pointer' }} onClick={() => setText('Tillgänglig!')}>Tillgänglig!</button>
+              <button type="button" style={{ fontSize: '0.85rem', padding: '0.25rem 0.7rem', borderRadius: 6, border: '1px solid #ccc', background: '#fafafa', cursor: 'pointer' }} onClick={() => setText('Fullstack')}>Fullstack</button>
+              <button type="button" style={{ fontSize: '0.85rem', padding: '0.25rem 0.7rem', borderRadius: 6, border: '1px solid #ccc', background: '#fafafa', cursor: 'pointer' }} onClick={() => setText('Konsult')}>Konsult</button>
+            </div>
           </div>
         </div>
         <div className="control">
