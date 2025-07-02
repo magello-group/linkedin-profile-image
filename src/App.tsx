@@ -13,6 +13,7 @@ function App() {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const [bgImage, setBgImage] = useState<HTMLImageElement | null>(null)
   const [fontLoaded, setFontLoaded] = useState(false)
+  const [fontSizeScale, setFontSizeScale] = useState(1) // 1 = 100%
 
   // Load font
   useEffect(() => {
@@ -49,8 +50,9 @@ function App() {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 
         if (text) {
-          // Set a fixed initial font size
-          const fontSize = Math.round(img.height * 0.20)
+          // Set a fixed initial font size, scaled by fontSizeScale
+          const baseFontSize = Math.round(img.height * 0.20)
+          const fontSize = Math.round(baseFontSize * fontSizeScale)
           ctx.font = `${fontSize}px KattuxAbc`
           const textMetrics = ctx.measureText(text)
 
@@ -86,7 +88,7 @@ function App() {
       }
       img.src = image
     }
-  }, [image, text, position, bgImage, fontLoaded])
+  }, [image, text, position, bgImage, fontLoaded, fontSizeScale])
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -147,6 +149,20 @@ function App() {
           placeholder="Ange text här..."
           className="text-input"
         />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <label htmlFor="fontSizeRange">Textstorlek</label>
+          <input
+            id="fontSizeRange"
+            type="range"
+            min={0.3}
+            max={1.5}
+            step={0.01}
+            value={fontSizeScale}
+            onChange={e => setFontSizeScale(Number(e.target.value))}
+            style={{ width: 100 }}
+          />
+          <span style={{ minWidth: 32, textAlign: 'right' }}>{Math.round(fontSizeScale * 100)}%</span>
+        </div>
       </div>
       <div className="preview">
         {image ? (
