@@ -136,32 +136,47 @@ function App() {
         Du kan dra texten för att positionera den precis där du vill ha den.
       </p>
       <div className="controls">
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="file-input"
-        />
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Ange text här..."
-          className="text-input"
-        />
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <label htmlFor="fontSizeRange">Textstorlek</label>
+        <div className="control">
           <input
-            id="fontSizeRange"
-            type="range"
-            min={0.3}
-            max={1.5}
-            step={0.01}
-            value={fontSizeScale}
-            onChange={e => setFontSizeScale(Number(e.target.value))}
-            style={{ width: 100 }}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="file-input"
           />
-          <span style={{ minWidth: 32, textAlign: 'right' }}>{Math.round(fontSizeScale * 100)}%</span>
+        </div>
+        <div className="control">
+
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Ange text här..."
+            className="text-input"
+            style={{ height: '2.5rem', minHeight: 'unset', maxHeight: 'unset', resize: 'none' }}
+          />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', justifyContent: 'center' }}>
+            <span style={{ fontSize: '0.95rem', color: '#666', marginBottom: 2 }}>Standardtexter (förslag):</span>
+            <button type="button" style={{ marginBottom: 2 }} onClick={() => setText('Anställer!')}>Anställer!</button>
+            <button type="button" style={{ marginBottom: 2 }} onClick={() => setText('Tillgänglig!')}>Tillgänglig!</button>
+            <button type="button" onClick={() => setText('Konsult')}>Konsult</button>
+          </div>
+        </div>
+        <div className="control">
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <label htmlFor="fontSizeRange">Textstorlek</label>
+            <input
+              id="fontSizeRange"
+              type="range"
+              min={0.3}
+              max={1.5}
+              step={0.01}
+              value={fontSizeScale}
+              onChange={e => setFontSizeScale(Number(e.target.value))}
+              style={{ width: 100 }}
+            />
+            <span style={{ minWidth: 32, textAlign: 'right' }}>{Math.round(fontSizeScale * 100)}%</span>
+          </div>
         </div>
       </div>
       <div className="preview">
@@ -188,10 +203,11 @@ function App() {
             </button>
           </>
         ) : (
-          <p className="placeholder">Välj en bild för att se förhandsvisning</p>
+          <p className="placeholder">Ladda upp en bild för att se förhandsvisning</p>
         )}
       </div>
     </div>
+
   )
 }
 
