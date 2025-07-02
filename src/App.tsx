@@ -180,6 +180,10 @@ function App() {
               className="download-button"
               disabled={!image || !text}
             >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ verticalAlign: 'middle', marginRight: 8 }}>
+                <path d="M10 2v10m0 0l-4-4m4 4l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <rect x="4" y="16" width="12" height="2" rx="1" fill="currentColor" />
+              </svg>
               Ladda ner bild
             </button>
           </>
