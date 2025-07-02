@@ -158,6 +158,7 @@ function App() {
             <span style={{ fontSize: '0.95rem', color: '#666', marginBottom: 2 }}>Standardtexter (förslag):</span>
             <button type="button" style={{ marginBottom: 2 }} onClick={() => setText('Anställer!')}>Anställer!</button>
             <button type="button" style={{ marginBottom: 2 }} onClick={() => setText('Tillgänglig!')}>Tillgänglig!</button>
+            <button type="button" style={{ marginBottom: 2 }} onClick={() => setText('Tillgänglig!')}>Fullstack</button>
             <button type="button" onClick={() => setText('Konsult')}>Konsult</button>
           </div>
         </div>
