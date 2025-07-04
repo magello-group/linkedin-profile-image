@@ -10,7 +10,8 @@
         ".cjs": "application/javascript",
         ".jsx": "application/javascript",
         ".ts": "application/javascript",
-        ".tsx": "application/javascript"
+        ".tsx": "application/javascript",
+        ".txt": "text/plain; charset=utf-8"
     },
     "routes": [
         {
