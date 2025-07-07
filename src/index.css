@@ -71,3 +71,55 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.app {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: 'Inter', 'KattuxAbc', Arial, sans-serif;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.file-input {
+  font-size: 1rem;
+}
+
+.text-input {
+  font-size: 1.1rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.download-button {
+  background: #e6007a;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.download-button:hover {
+  background: #c20065;
+}
+
+.preview {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.canvas {
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  background: #fff;
+}
