@@ -146,7 +146,6 @@ function App() {
           />
         </div>
         <div className="control">
-
           <input
             type="text"
             value={text}
@@ -163,23 +162,6 @@ function App() {
               <button type="button" style={{ fontSize: '0.85rem', padding: '0.25rem 0.7rem', borderRadius: 6, border: '1px solid #ccc', background: '#fafafa', cursor: 'pointer' }} onClick={() => setText('Fullstack')}>Fullstack</button>
               <button type="button" style={{ fontSize: '0.85rem', padding: '0.25rem 0.7rem', borderRadius: 6, border: '1px solid #ccc', background: '#fafafa', cursor: 'pointer' }} onClick={() => setText('Konsult')}>Konsult</button>
             </div>
-          </div>
-        </div>
-        <div className="control">
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <label htmlFor="fontSizeRange">Textstorlek</label>
-            <input
-              id="fontSizeRange"
-              type="range"
-              min={0.3}
-              max={1.5}
-              step={0.01}
-              value={fontSizeScale}
-              onChange={e => setFontSizeScale(Number(e.target.value))}
-              style={{ width: 100 }}
-            />
-            <span style={{ minWidth: 32, textAlign: 'right' }}>{Math.round(fontSizeScale * 100)}%</span>
           </div>
         </div>
       </div>
@@ -205,6 +187,20 @@ function App() {
               </svg>
               Ladda ner bild
             </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 16, justifyContent: 'center' }}>
+              <label htmlFor="fontSizeRange">Textstorlek</label>
+              <input
+                id="fontSizeRange"
+                type="range"
+                min={0.3}
+                max={1.5}
+                step={0.01}
+                value={fontSizeScale}
+                onChange={e => setFontSizeScale(Number(e.target.value))}
+                style={{ width: 100 }}
+              />
+              <span style={{ minWidth: 32, textAlign: 'right' }}>{Math.round(fontSizeScale * 100)}%</span>
+            </div>
           </>
         ) : (
           <p className="placeholder">Ladda upp en bild för att se förhandsvisning</p>

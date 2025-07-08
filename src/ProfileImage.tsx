@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 
 const CANVAS_SIZE = 1080
 
-export default function ProfileImageOnly() {
+export default function ProfileImage() {
     const [image, setImage] = useState<string | null>(null)
     const [scale, setScale] = useState(1)
     const [overlay, setOverlay] = useState<HTMLImageElement | null>(null)
@@ -125,6 +125,7 @@ export default function ProfileImageOnly() {
 
     return (
         <div className="app">
+            <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
             <h1>LinkedIn Profilbild</h1>
             <p className="description">Ta en bild i liggande läge. Ladda upp bilden, skala och flytta bakgrundsbilden. Bilden laddas ner i 1080x1080px. Positionera bilden så den liknar referensbilden till höger.</p>
             <div className="controls">
