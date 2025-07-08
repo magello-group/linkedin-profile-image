@@ -51,7 +51,7 @@ Applikationen öppnas i din standardwebbläsare på `http://localhost:5173` (ell
 1. Starta appen och välj ett av verktygen på startsidan:
    - **Profilbild**: `/profile`
    - **Badge på profilbild**: `/badge`
-   - **LinkedIn - Nyanställd nyhetsbild**: `/linkedin-new-work`
+   - **LinkedIn - Nyanställd nyhetsbild**: `/new-employee`
 2. Följ instruktionerna för respektive verktyg:
    - Ladda upp bild
    - Lägg till och justera text (om tillämpligt)

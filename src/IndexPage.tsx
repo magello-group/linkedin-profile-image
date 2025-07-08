@@ -17,7 +17,7 @@ export default function IndexPage() {
                         Skapa en LinkedIn-profilbild med överlagrad text och bakgrundsbadge. Ladda upp din profilbild, lägg till text och ladda ner resultatet.
                     </li>
                     <li style={{ marginBottom: '1.5rem' }}>
-                        <strong><Link to="/linkedin-new-work">LinkedIn - Nyanställd nyhetsbild</Link></strong><br />
+                        <strong><Link to="/new-employee">LinkedIn - Nyanställd nyhetsbild</Link></strong><br />
                         Generera en bild för LinkedIn-inlägg med valfri text, färg, rotation och överlägg. Anpassa bild och text fritt.
                     </li>
                 </ul>

@@ -126,8 +126,8 @@ export default function ProfileImage() {
     return (
         <div className="app">
             <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
-            <h1>LinkedIn Profilbild</h1>
-            <p className="description">Ta en bild i liggande läge. Ladda upp bilden, skala och flytta bakgrundsbilden. Bilden laddas ner i 1080x1080px. Positionera bilden så den liknar referensbilden till höger.</p>
+            <h1>Magello profilbild</h1>
+            <p className="description">Ladda upp bilden du tagit mot vit bakgrund. Du kan skala och flytta bakgrundsbilden. Bilden laddas ner i 1080x1080px. Positionera och anpassa bilden så den liknar referensbilden till höger.</p>
             <div className="controls">
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="file-input" />
             </div>

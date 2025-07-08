@@ -15,7 +15,7 @@ if (root) {
         <Routes>
           <Route path="/" element={<IndexPage />} />
           <Route path="/badge" element={<App />} />
-          <Route path="/linkedin-new-work" element={<NewEmployee />} />
+          <Route path="/new-employee" element={<NewEmployee />} />
           <Route path="/profile" element={<ProfileImage />} />
         </Routes>
       </BrowserRouter>
