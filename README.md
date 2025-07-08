@@ -1,18 +1,19 @@
-# LinkedIn Profilbildsgenerator
+# LinkedIn Profilbilds- och Inläggsgenerator
 
-En webbapplikation som låter dig skapa professionella LinkedIn-profilbilder med anpassad text. Perfekt för att skapa profilbilder med ditt namn eller företagsinformation.
+En webbapplikation som låter dig skapa professionella LinkedIn-bilder och inlägg med anpassad text och effekter. Perfekt för att skapa profilbilder, lägga till badge eller generera nyanställd-inlägg.
 
 ## Funktioner
 
-- Ladda upp din egen profilbild
-- Lägg till anpassad text
-- Välj bland standardtexter (t.ex. "Anställer!", "Tillgänglig!", "Fullstack", "Konsult")
-- Justera textstorleken med ett reglage
+- Tre verktyg i ett:
+  - **Profilbild**: Ladda upp, beskära och gör din bild svartvit med rosa skimmer. Ingen text eller badge.
+  - **Badge på profilbild**: Ladda upp bild, lägg till valfri text (eller välj bland förslag), positionera texten och ladda ner med badge.
+  - **LinkedIn - Nyanställd nyhetsbild**: Ladda upp valfri bild, lägg till namn/text, skala och flytta både bild och text, och ladda ner en färdig bild för LinkedIn-inlägg.
+- Justera textstorlek, position och färg där det är tillämpligt
 - Realtidsförhandsvisning av resultatet
 - Ladda ner den genererade bilden (med ikon på knappen)
-- Hover-effekter på formulärfält för bättre användarupplevelse
-- Responsiv design
-- Modernt och rent användargränssnitt
+- Drag & drop-positionering av bild och/eller text
+- Responsiv och modern design
+- Ingen bilddata laddas upp till någon server – allt sker lokalt i din webbläsare
 
 ## Kom igång
 
@@ -38,20 +39,24 @@ yarn install
 
 3. Starta utvecklingsservern:
 ```bash
-npm start
+npm run dev
 # eller
-yarn start
+yarn dev
 ```
 
-Applikationen öppnas i din standardwebbläsare på `http://localhost:3000`.
+Applikationen öppnas i din standardwebbläsare på `http://localhost:5173` (eller enligt Vite-konfiguration).
 
 ## Användning
 
-1. Klicka på "Välj fil" för att ladda upp din profilbild
-2. Ange den text du vill ha överlagrad på din bild, eller välj en av standardtexterna genom att klicka på någon av förslagsknapparna
-3. Justera textstorleken med reglaget om du vill
-4. Förhandsgranska resultatet i realtid
-5. Klicka på "Ladda ner bild" (med nedladdningsikon) för att spara din genererade bild
+1. Starta appen och välj ett av verktygen på startsidan:
+   - **Profilbild**: `/profile`
+   - **Badge på profilbild**: `/badge`
+   - **LinkedIn - Nyanställd nyhetsbild**: `/linkedin-new-work`
+2. Följ instruktionerna för respektive verktyg:
+   - Ladda upp bild
+   - Lägg till och justera text (om tillämpligt)
+   - Skala och flytta bild/text
+   - Förhandsgranska och ladda ner din bild
 
 ## Deployment
 
@@ -72,6 +77,7 @@ Applikationen är konfigurerad för automatisk deployment till Azure Static Web 
 - CSS3
 - Azure Static Web Apps
 - GitHub Actions
+- Vite
 
 ## Licens
 
