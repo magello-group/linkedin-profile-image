@@ -1,21 +1,12 @@
 import { useRef, useState, useEffect } from 'react'
 
-const fontFace = new FontFace('KattuxAbc', 'url(/KattuxAbc-Regular.otf)')
-
 const CANVAS_SIZE = 1080
 
-export default function NewLinkedinPost() {
+export default function ProfileImageOnly() {
     const [image, setImage] = useState<string | null>(null)
     const [scale, setScale] = useState(1)
-    const [text, setText] = useState('')
-    const [fontLoaded, setFontLoaded] = useState(false)
-    const [fontSize, setFontSize] = useState(78)
-    const [svgOverlay, setSvgOverlay] = useState<HTMLImageElement | null>(null)
+    const [overlay, setOverlay] = useState<HTMLImageElement | null>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
-
-    // Textposition
-    const [textX, setTextX] = useState(506)
-    const [textY, setTextY] = useState(980)
 
     // Bilddrag-state
     const [draggingImage, setDraggingImage] = useState(false)
@@ -23,29 +14,21 @@ export default function NewLinkedinPost() {
     const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(null)
     const [imageStartOffset, setImageStartOffset] = useState({ x: 0, y: 0 })
 
+    // Ladda overlay-bilden
+    useEffect(() => {
+        const img = new window.Image()
+        img.onload = () => setOverlay(img)
+        img.src = '/profile-image-overlay.png'
+    }, [])
+
     // Centrera bild från början
     useEffect(() => {
         setImageOffset({ x: 0, y: 0 })
     }, [image, scale])
 
-    // Load font
-    useEffect(() => {
-        fontFace.load().then((loadedFont) => {
-            document.fonts.add(loadedFont)
-            setFontLoaded(true)
-        })
-    }, [])
-
-    // Load SVG overlay
-    useEffect(() => {
-        const img = new Image()
-        img.onload = () => setSvgOverlay(img)
-        img.src = '/linkedin-post.svg'
-    }, [])
-
     // Draw everything
     useEffect(() => {
-        if (!canvasRef.current || !fontLoaded || !svgOverlay) return
+        if (!canvasRef.current) return
         const ctx = canvasRef.current.getContext('2d')
         if (!ctx) return
         ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
@@ -62,50 +45,28 @@ export default function NewLinkedinPost() {
                 const x = (CANVAS_SIZE - w) / 2 + imageOffset.x
                 const y = (CANVAS_SIZE - h) / 2 + imageOffset.y
                 ctx.drawImage(img, x, y, w, h)
-
-                // Draw SVG overlay to cover the whole canvas
-                ctx.drawImage(svgOverlay, 0, 0, CANVAS_SIZE, CANVAS_SIZE)
-
-                // Draw text on top of SVG (styrd av x/y)
-                if (text) {
-                    ctx.save()
-                    ctx.font = `${fontSize}px KattuxAbc`
-                    ctx.fillStyle = '#009EE3'
-                    ctx.textAlign = 'center'
-                    ctx.textBaseline = 'middle'
-                    ctx.shadowColor = 'rgba(0,0,0,0.5)'
-                    ctx.shadowBlur = 2
-                    ctx.shadowOffsetX = 1
-                    ctx.shadowOffsetY = 1
-                    // Rotera -2 grader kring textens mittpunkt
-                    ctx.translate(textX, textY)
-                    ctx.rotate(-2 * Math.PI / 180)
-                    ctx.fillText(text, 0, 0)
-                    ctx.restore()
+                // Gör bilden svartvit (gråskala)
+                const imageData = ctx.getImageData(x, y, w, h)
+                const data = imageData.data
+                for (let i = 0; i < data.length; i += 4) {
+                    let gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
+                    gray = Math.max(0, Math.min(255, gray * 1.2))
+                    // Lägg till lite mer kontrast
+                    gray = (gray - 128) * 1.15 + 128
+                    gray = Math.max(0, Math.min(255, gray))
+                    data[i] = data[i + 1] = data[i + 2] = gray
+                }
+                ctx.putImageData(imageData, x, y)
+                // Rita overlay ovanpå allt
+                if (overlay) {
+                    ctx.drawImage(overlay, 0, 0, CANVAS_SIZE, CANVAS_SIZE)
                 }
             }
             img.src = image
-        } else {
-            // Draw SVG overlay to cover the whole canvas even if no image
-            ctx.drawImage(svgOverlay, 0, 0, CANVAS_SIZE, CANVAS_SIZE)
-            if (text) {
-                ctx.save()
-                ctx.font = `${fontSize}px KattuxAbc`
-                ctx.fillStyle = '#009EE3'
-                ctx.textAlign = 'center'
-                ctx.textBaseline = 'middle'
-                ctx.shadowColor = 'rgba(0,0,0,0.5)'
-                ctx.shadowBlur = 2
-                ctx.shadowOffsetX = 1
-                ctx.shadowOffsetY = 1
-                // Rotera -2 grader kring textens mittpunkt
-                ctx.translate(textX, textY)
-                ctx.rotate(-2 * Math.PI / 180)
-                ctx.fillText(text, 0, 0)
-                ctx.restore()
-            }
+        } else if (overlay) {
+            ctx.drawImage(overlay, 0, 0, CANVAS_SIZE, CANVAS_SIZE)
         }
-    }, [image, scale, imageOffset, text, fontLoaded, fontSize, svgOverlay, textX, textY])
+    }, [image, scale, imageOffset, overlay])
 
     // Bilddrag: mouse events
     function handleMouseDown(e: React.MouseEvent<HTMLCanvasElement>) {
@@ -164,45 +125,39 @@ export default function NewLinkedinPost() {
 
     return (
         <div className="app">
-            <h1>LinkedIn - Nyanställd</h1>
-            <p className="description">Ladda upp en bild och skriv ett namn. Du kan skala och flytta bakgrundsbilden. Bilden laddas ner i 1080x1080px som passar LinkedIn-postning. Du kan även finjustera textens position. </p>
+            <h1>LinkedIn Profilbild</h1>
+            <p className="description">Ta en bild i liggande läge. Ladda upp bilden, skala och flytta bakgrundsbilden. Bilden laddas ner i 1080x1080px. Positionera bilden så den liknar referensbilden till höger.</p>
             <div className="controls">
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="file-input" />
-                <input type="text" value={text} onChange={e => setText(e.target.value)} placeholder="Ditt förnamn Efternamn" className="text-input" style={{ width: 220, marginLeft: 16 }} />
             </div>
-            <div className="preview">
+            <div className="preview" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', gap: '2rem', overflow: 'auto', minWidth: 0, flexWrap: 'nowrap' }}>
                 <canvas
                     ref={canvasRef}
                     width={CANVAS_SIZE}
                     height={CANVAS_SIZE}
                     className="canvas"
-                    style={{ border: '1px solid #ccc', background: '#fff', maxWidth: 540, width: '100%', cursor: draggingImage ? 'grabbing' : image ? 'grab' : 'default' }}
+                    style={{ border: '1px solid #ccc', background: '#fff', maxWidth: 540, minWidth: 0, flex: '1 1 0', width: '100%', cursor: draggingImage ? 'grabbing' : image ? 'grab' : 'default', boxSizing: 'border-box' }}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
                     onMouseLeave={handleMouseUp}
                 />
+                <img
+                    src="/profile-image-outlines.png"
+                    alt="Profile image outlines"
+                    style={{ maxWidth: 540, minWidth: 0, flex: '1 1 0', width: '100%', height: 'auto', display: 'block', background: '#fff', border: '1px solid #ccc', boxSizing: 'border-box' }}
+                />
             </div>
+            <style>{`
+                @media (max-width: 1100px) {
+                    .preview { flex-wrap: wrap !important; }
+                }
+            `}</style>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center', marginTop: '1.5rem', alignItems: 'center' }}>
                 <label>
                     Skala bild
                     <input type="range" min={0.2} max={2} step={0.01} value={scale} onChange={e => setScale(Number(e.target.value))} style={{ width: 120, marginLeft: 8 }} />
                     <span style={{ marginLeft: 8 }}>{Math.round(scale * 100)}%</span>
-                </label>
-                <label>
-                    Textstorlek
-                    <input type="range" min={40} max={200} step={1} value={fontSize} onChange={e => setFontSize(Number(e.target.value))} style={{ width: 120, marginLeft: 8 }} />
-                    <span style={{ marginLeft: 8 }}>{fontSize}px</span>
-                </label>
-                <label>
-                    Text X
-                    <input type="range" min={0} max={CANVAS_SIZE} step={1} value={textX} onChange={e => setTextX(Number(e.target.value))} style={{ width: 120, marginLeft: 8 }} />
-                    <span style={{ marginLeft: 8 }}>{textX}</span>
-                </label>
-                <label>
-                    Text Y
-                    <input type="range" min={0} max={CANVAS_SIZE} step={1} value={textY} onChange={e => setTextY(Number(e.target.value))} style={{ width: 120, marginLeft: 8 }} />
-                    <span style={{ marginLeft: 8 }}>{textY}</span>
                 </label>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
