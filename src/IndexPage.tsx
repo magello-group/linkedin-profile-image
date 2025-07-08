@@ -9,7 +9,7 @@ export default function IndexPage() {
                 <p>Välj en av tjänsterna nedan för att skapa eller redigera bilder för LinkedIn:</p>
                 <ul style={{ listStyle: 'none', padding: 0, fontSize: '1.1rem' }}>
                     <li style={{ marginBottom: '1.5rem' }}>
-                        <strong><Link to="/profile">Profilbild (endast beskärning och effekter)</Link></strong><br />
+                        <strong><Link to="/profile">Profilbild</Link></strong><br />
                         Ladda upp och skapa din svartvita profilbild med ett rosa skimmer.
                     </li>
                     <li style={{ marginBottom: '1.5rem' }}>
