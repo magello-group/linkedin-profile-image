@@ -4,106 +4,47 @@ const CANVAS_SIZE = 1080
 
 export default function ProfileImage() {
     const [image, setImage] = useState<string | null>(null)
-    const [scale, setScale] = useState(1)
-    const [overlay, setOverlay] = useState<HTMLImageElement | null>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
+    const [scale, setScale] = useState(1)
 
-    // Bilddrag-state
-    const [draggingImage, setDraggingImage] = useState(false)
-    const [imageOffset, setImageOffset] = useState({ x: 0, y: 0 }) // Aktuell offset från canvasens mitt
-    const [dragStart, setDragStart] = useState<{ x: number; y: number } | null>(null)
-    const [imageStartOffset, setImageStartOffset] = useState({ x: 0, y: 0 })
 
-    // Ladda overlay-bilden
-    useEffect(() => {
-        const img = new window.Image()
-        img.onload = () => setOverlay(img)
-        img.src = '/profile-image-overlay.png'
-    }, [])
 
-    // Centrera bild från början
-    useEffect(() => {
-        setImageOffset({ x: 0, y: 0 })
-    }, [image, scale])
-
-    // Draw everything
+    // Draw everything (endast gråskala, behåll proportioner)
     useEffect(() => {
         if (!canvasRef.current) return
         const ctx = canvasRef.current.getContext('2d')
         if (!ctx) return
         ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE)
 
-        // Draw uploaded image, scaled and positioned
         if (image) {
             const img = new Image()
             img.onload = () => {
-                // Calculate scaled size
-                const scaleFactor = scale
-                const w = img.width * scaleFactor
-                const h = img.height * scaleFactor
-                // Center + offset
-                const x = (CANVAS_SIZE - w) / 2 + imageOffset.x
-                const y = (CANVAS_SIZE - h) / 2 + imageOffset.y
-                ctx.drawImage(img, x, y, w, h)
-                // Gör bilden svartvit (gråskala)
-                const imageData = ctx.getImageData(x, y, w, h)
+                // Skala bilden proportionerligt för att passa canvasen (skala=1 motsvarar "fit")
+                const scaleToFit = Math.min(CANVAS_SIZE / img.width, CANVAS_SIZE / img.height)
+                const effectiveScale = scaleToFit * scale
+                const drawWidth = Math.round(img.width * effectiveScale)
+                const drawHeight = Math.round(img.height * effectiveScale)
+                const offsetX = Math.round((CANVAS_SIZE - drawWidth) / 2)
+                const offsetY = Math.round((CANVAS_SIZE - drawHeight) / 2)
+
+                // Använd högkvalitativ bildinterpolering vid nedskalning
+                ctx.imageSmoothingEnabled = true
+                ctx.imageSmoothingQuality = 'high'
+
+                ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight)
+                const imageData = ctx.getImageData(offsetX, offsetY, drawWidth, drawHeight)
                 const data = imageData.data
                 for (let i = 0; i < data.length; i += 4) {
-                    let gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
-                    gray = Math.max(0, Math.min(255, gray * 1.2))
-                    // Lägg till lite mer kontrast
-                    gray = (gray - 128) * 1.15 + 128
-                    gray = Math.max(0, Math.min(255, gray))
+                    const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
                     data[i] = data[i + 1] = data[i + 2] = gray
                 }
-                ctx.putImageData(imageData, x, y)
-                // Rita overlay ovanpå allt
-                if (overlay) {
-                    ctx.drawImage(overlay, 0, 0, CANVAS_SIZE, CANVAS_SIZE)
-                }
+                ctx.putImageData(imageData, offsetX, offsetY)
             }
             img.src = image
-        } else if (overlay) {
-            ctx.drawImage(overlay, 0, 0, CANVAS_SIZE, CANVAS_SIZE)
         }
-    }, [image, scale, imageOffset, overlay])
+    }, [image, scale])
 
-    // Bilddrag: mouse events
-    function handleMouseDown(e: React.MouseEvent<HTMLCanvasElement>) {
-        if (!image) return
-        const rect = e.currentTarget.getBoundingClientRect()
-        const x = e.clientX - rect.left
-        const y = e.clientY - rect.top
-        // Kolla om klick är inom bilden
-        const img = new window.Image()
-        img.src = image
-        const scaleFactor = scale
-        const w = img.width * scaleFactor
-        const h = img.height * scaleFactor
-        const imgX = (CANVAS_SIZE - w) / 2 + imageOffset.x
-        const imgY = (CANVAS_SIZE - h) / 2 + imageOffset.y
-        if (x >= imgX && x <= imgX + w && y >= imgY && y <= imgY + h) {
-            setDraggingImage(true)
-            setDragStart({ x, y })
-            setImageStartOffset({ ...imageOffset })
-        }
-    }
-    function handleMouseMove(e: React.MouseEvent<HTMLCanvasElement>) {
-        if (!draggingImage) return
-        const rect = e.currentTarget.getBoundingClientRect()
-        const x = e.clientX - rect.left
-        const y = e.clientY - rect.top
-        if (dragStart) {
-            setImageOffset({
-                x: imageStartOffset.x + (x - dragStart.x),
-                y: imageStartOffset.y + (y - dragStart.y),
-            })
-        }
-    }
-    function handleMouseUp() {
-        setDraggingImage(false)
-        setDragStart(null)
-    }
+    // Ingen drag/scale-hantering längre
 
     function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0]
@@ -127,21 +68,17 @@ export default function ProfileImage() {
         <div className="app">
             <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
             <h1>Magello profilbild</h1>
-            <p className="description">Ladda upp bilden du tagit mot vit bakgrund. Du kan skala och flytta bakgrundsbilden. Bilden laddas ner i 1080x1080px. Positionera och anpassa bilden så den liknar referensbilden till höger.</p>
+            <p className="description">Ladda upp en bild så omvandlas den till gråskala. Bilden laddas ner i 1080x1080px.</p>
             <div className="controls">
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="file-input" />
             </div>
-            <div className="preview" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'flex-start', gap: '2rem', overflow: 'auto', minWidth: 0, flexWrap: 'nowrap' }}>
+            <div className="preview" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '2rem', overflow: 'auto', minWidth: 0, flexWrap: 'nowrap' }}>
                 <canvas
                     ref={canvasRef}
                     width={CANVAS_SIZE}
                     height={CANVAS_SIZE}
                     className="canvas"
-                    style={{ border: '1px solid #ccc', background: '#fff', maxWidth: 540, minWidth: 0, flex: '1 1 0', width: '100%', cursor: draggingImage ? 'grabbing' : image ? 'grab' : 'default', boxSizing: 'border-box' }}
-                    onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={handleMouseUp}
-                    onMouseLeave={handleMouseUp}
+                    style={{ border: '1px solid #ccc', background: '#fff', maxWidth: 540, minWidth: 0, flex: '1 1 0', width: '100%', boxSizing: 'border-box' }}
                 />
                 <img
                     src="/profile-image-outlines.png"
