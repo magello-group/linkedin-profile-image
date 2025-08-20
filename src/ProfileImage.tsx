@@ -79,7 +79,7 @@ export default function ProfileImage() {
     function handleDownload() {
         if (canvasRef.current) {
             const link = document.createElement('a')
-            link.download = 'linkedin-post.png'
+            link.download = 'profile-image.png'
             link.href = canvasRef.current.toDataURL('image/png')
             link.click()
         }
@@ -158,6 +158,7 @@ export default function ProfileImage() {
                     <input type="range" min={1} max={3} step={0.01} value={scale} onChange={e => setScale(Number(e.target.value))} style={{ width: 160, marginLeft: 8 }} />
                     <span style={{ marginLeft: 8 }}>{Math.round(scale * 100)}%</span>
                 </label>
+
                 {/* Blend-läge hårdkodat till 'color' i renderingen */}
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
