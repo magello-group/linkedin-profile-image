@@ -1,0 +1,55 @@
+name: Pull request
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build builder stage only (no image)
+        uses: docker/build-push-action@v6
+        with:
+          push: false
+          target: builder
+          outputs: type=local,dest=./build-output
+
+      - name: Login via Azure CLI
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_AUTH_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_AUTH_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Login to Azure container registry
+        run: |
+          az acr login --name ${{ secrets.AZURE_CONTAINER_REGISTRY }}
+
+      - name: Lint Bicep scripts
+        run: |
+          az bicep install
+          az bicep lint --file infrastructure/main.bicep --diagnostics-format sarif > bicep.sarif
+
+          if [ ! -f "bicep.sarif" ]; then
+            echo "❌ Bicep lint result file not found. Failing the pipeline."
+            exit 1
+          fi
+
+          # Check if there are any results in the SARIF file
+          if jq -e '.runs[].results | length > 0' "bicep.sarif" > /dev/null; then
+            echo "❌ Lint issues found. Failing the pipeline."
+            exit 1
+          else
+            echo "✅ No lint issues found. Proceeding."
+          fi
+
+
+      - name: Build Bicep scripts
+        run: |
+          az bicep build --file infrastructure/main.bicep
