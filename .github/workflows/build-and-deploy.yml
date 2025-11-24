@@ -1,0 +1,102 @@
+name: Linkedin profile image CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and pushes Docker image to Azure Container Registry
+
+    environment: Production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login via Azure CLI
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_AUTH_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_AUTH_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Login to Azure container registry
+        run: |
+          az acr login --name ${{ secrets.AZURE_CONTAINER_REGISTRY }}
+
+      - name: Get version from commit SHA
+        id: get_version
+        run: echo "VERSION=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: ${{ secrets.AZURE_CONTAINER_REGISTRY }}/linkedin-profile-image:${{ steps.get_version.outputs.VERSION }}
+
+      - name: Azure container registry logout
+        if: always()
+        run: |
+          docker logout ${{ secrets.AZURE_CONTAINER_REGISTRY }}
+
+  deploy:
+    name: Deploys to Azure production environment
+
+    environment: Production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    needs:
+      - build
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Get version from github ref
+        id: get_version
+        run: echo "VERSION=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Get last committer
+        id: last_committer
+        run: echo "committer=$(git log -1 --pretty=format:'%ae')" >> $GITHUB_OUTPUT
+
+      - name: Login via Azure CLI
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_AUTH_CLIENT_ID }}
+          subscription-id: ${{ secrets.AZURE_AUTH_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Deploy to Azure environment
+        uses: azure/bicep-deploy@v2
+        with:
+          operation: create
+          type: deploymentStack
+          scope: subscription
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          location: swedencentral
+          name: linkedin-profile-image-prod
+          template-file: ./infrastructure/main.bicep
+          action-on-unmanage-resources: delete
+          deny-settings-mode: none
+          parameters: |
+            {
+              "environment": "prod",
+              "imageVersion": "${{ steps.get_version.outputs.VERSION }}",
+              "tags": {
+                "lastUpdatedBy": "${{ steps.last_committer.outputs.committer }}",
+                "version": "${{ steps.get_version.outputs.VERSION }}"
+              }
+            }

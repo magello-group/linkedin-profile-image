@@ -1,0 +1,11 @@
+# Docker ignore for Vite project
+node_modules
+dist
+.git
+.github
+venv
+.env
+npm-debug.log
+Dockerfile
+docker-compose*.yml
+*/.DS_Store
