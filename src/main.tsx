@@ -5,6 +5,7 @@ import App from './App'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import NewEmployee from './NewEmployee'
 import ProfileImage from './ProfileImage'
+import LinkedinHeader from './LinkedinHeader'
 import IndexPage from './IndexPage'
 
 const root = document.getElementById('root')
@@ -15,6 +16,7 @@ if (root) {
         <Routes>
           <Route path="/" element={<IndexPage />} />
           <Route path="/badge" element={<App />} />
+          <Route path="/linkedin-banner" element={<LinkedinHeader />} />
           <Route path="/new-employee" element={<NewEmployee />} />
           <Route path="/profile" element={<ProfileImage />} />
         </Routes>

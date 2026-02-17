@@ -13,6 +13,11 @@ export default function IndexPage() {
                         Ladda upp och skapa din svartvita profilbild med ett rosa skimmer.
                     </li>
                     <li style={{ marginBottom: '1.5rem' }}>
+                        <strong><Link to="/linkedin-banner">Topp badge till din Linkedin profil</Link></strong><br />
+                        Banner LinkedIn.
+                    </li>
+
+                    <li style={{ marginBottom: '1.5rem' }}>
                         <strong><Link to="/badge">Badge på din profilbild</Link></strong><br />
                         Skapa en LinkedIn-profilbild med överlagrad text och bakgrundsbadge. Ladda upp din profilbild, lägg till text och ladda ner resultatet.
                     </li>
