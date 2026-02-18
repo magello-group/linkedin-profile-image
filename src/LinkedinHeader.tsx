@@ -8,6 +8,7 @@ const CANVAS_SIZE_HEIGHT = 396
 function NewEmployee() {
     const [image, setImage] = useState<string | null>(null)
     const [scale, setScale] = useState(1)
+    const [tintStrength] = useState(0.28) // 0–1 (0–100%)
     const [text, setText] = useState('')
     const [fontLoaded, setFontLoaded] = useState(false)
     const [fontSize, setFontSize] = useState(78)
@@ -55,6 +56,7 @@ function NewEmployee() {
         if (image) {
             const img = new Image()
             img.onload = () => {
+
                 // Calculate scaled size
                 const scaleFactor = scale
                 const w = img.width * scaleFactor
@@ -64,9 +66,35 @@ function NewEmployee() {
                 const y = (CANVAS_SIZE_HEIGHT - h) / 2 + imageOffset.y
                 ctx.drawImage(img, x, y, w, h)
 
-                // Draw SVG overlay to cover the whole canvas
-                ctx.drawImage(svgOverlay, 0, 0, CANVAS_SIZE_WIDTH, CANVAS_SIZE_HEIGHT)
+                // Använd högkvalitativ bildinterpolering
+                ctx.imageSmoothingEnabled = true
+                ctx.imageSmoothingQuality = 'low'
 
+                // Rita bilden och konvertera sedan till gråskala via pixeldata (mest kompatibelt)
+                ctx.drawImage(img, x, y, w, h)
+                const imageData = ctx.getImageData(x, y, w, h)
+                const data = imageData.data
+                for (let i = 0; i < data.length; i += 4) {
+                    const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]
+                    data[i] = data[i + 1] = data[i + 2] = gray
+                }
+                ctx.putImageData(imageData, x, y)
+
+                // Färgblanda med #ffe8e8 (hårdkodat blend-läge: 'color') + justerbar intensitet
+                const previousOp = ctx.globalCompositeOperation
+                const previousAlpha = ctx.globalAlpha
+                ctx.globalCompositeOperation = 'color'
+                ctx.fillStyle = '#ffe8e8'
+                ctx.globalAlpha = Math.max(0, Math.min(1, tintStrength))
+                ctx.fillRect(0, 0, CANVAS_SIZE_WIDTH, CANVAS_SIZE_HEIGHT)
+                ctx.globalCompositeOperation = previousOp
+                ctx.globalAlpha = previousAlpha
+
+                // Draw SVG overlay to cover the whole canvas
+                ctx.drawImage(svgOverlay, 0, 1, CANVAS_SIZE_WIDTH, CANVAS_SIZE_HEIGHT)
+
+                console.log('Image drawn with scale', scale, 'and offset', imageOffset)
+                console.log('Image size:', img.width, 'x', img.height, 'scaled to', w, 'x', h)
                 // Draw text on top of SVG (styrd av x/y)
                 if (text) {
                     ctx.save()
@@ -75,7 +103,7 @@ function NewEmployee() {
                     ctx.textAlign = 'center'
                     ctx.textBaseline = 'middle'
                     ctx.shadowColor = 'rgba(0,0,0,0.5)'
-                    ctx.shadowBlur = 2
+                    ctx.shadowBlur = 1
                     ctx.shadowOffsetX = 1
                     ctx.shadowOffsetY = 1
                     // Rotera -2 grader kring textens mittpunkt
@@ -178,7 +206,7 @@ function NewEmployee() {
                     width={CANVAS_SIZE_WIDTH}
                     height={CANVAS_SIZE_HEIGHT}
                     className="canvas"
-                    style={{ border: '1px solid #ccc', background: '#fff', maxWidth: 1400, width: '100%', cursor: draggingImage ? 'grabbing' : image ? 'grab' : 'default' }}
+                    style={{ border: '0px solid #fff', background: '#fff', maxWidth: 1584, width: '100%', maxHeight: 396, cursor: draggingImage ? 'grabbing' : image ? 'grab' : 'default' }}
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}

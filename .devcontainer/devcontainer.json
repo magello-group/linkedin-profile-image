@@ -3,12 +3,12 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "features": {},
-  "forwardPorts": [5173],
+  "features": { },
+  "forwardPorts": [ 5173 ],
   "postCreateCommand": "npm install",
   "customizations": {
     "vscode": {
-      "settings": {},
+      "settings": { },
       "extensions": [
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
