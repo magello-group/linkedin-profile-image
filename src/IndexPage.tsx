@@ -25,6 +25,10 @@ export default function IndexPage() {
                         <strong><Link to="/new-employee">LinkedIn - Nyanställd nyhetsbild</Link></strong><br />
                         Generera en bild för LinkedIn-inlägg med valfri text, färg, rotation och överlägg. Anpassa bild och text fritt.
                     </li>
+                    <li style={{ marginBottom: '1.5rem' }}>
+                        <strong><Link to="/powerpoint">Powerpoint</Link></strong><br />
+                        Generera en bilder till t ex Powerpoint.
+                    </li>
                 </ul>
                 <p style={{ color: '#888', fontSize: '0.95rem', marginTop: '2rem' }}>
                     Alla tjänster körs lokalt i din webbläsare – ingen bilddata laddas upp till någon server.

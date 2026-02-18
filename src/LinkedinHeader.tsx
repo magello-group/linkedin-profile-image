@@ -5,7 +5,7 @@ const fontFace = new FontFace('KattuxAbc', 'url(/KattuxAbc-Regular.otf)')
 const CANVAS_SIZE_WIDTH = 1584
 const CANVAS_SIZE_HEIGHT = 396
 
-function NewEmployee() {
+function LinkedinHeader() {
     const [image, setImage] = useState<string | null>(null)
     const [scale, setScale] = useState(1)
     const [tintStrength] = useState(0.28) // 0–1 (0–100%)
@@ -248,4 +248,4 @@ function NewEmployee() {
     )
 }
 
-export default NewEmployee
+export default LinkedinHeader

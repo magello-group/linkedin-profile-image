@@ -7,6 +7,7 @@ import NewEmployee from './NewEmployee'
 import ProfileImage from './ProfileImage'
 import LinkedinHeader from './LinkedinHeader'
 import IndexPage from './IndexPage'
+import Powerpoint from './Powerpoint'
 
 const root = document.getElementById('root')
 if (root) {
@@ -19,6 +20,7 @@ if (root) {
           <Route path="/linkedin-banner" element={<LinkedinHeader />} />
           <Route path="/new-employee" element={<NewEmployee />} />
           <Route path="/profile" element={<ProfileImage />} />
+          <Route path="/powerpoint" element={<Powerpoint />} />
         </Routes>
       </BrowserRouter>
     </StrictMode>
