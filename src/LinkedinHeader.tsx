@@ -195,9 +195,9 @@ function LinkedinHeader() {
         <div className="app">
             <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
             <h1>LinkedIn - Toppbanner</h1>
-            <p className="description">Ladda upp en bild och skriv ett namn. Du kan skala och flytta bakgrundsbilden. Bilden laddas ner i 1080x1080px som passar LinkedIn-postning. Du kan även finjustera textens position.
+            <p className="description">Ladda upp en bild (och skriv en text). Du kan skala och flytta (bakgrundsbilden. Bilden laddas ner i 1584x396px som passar LinkedIn. Du kan även finjustera eventuell texts position.
                 <br />
-                <br />Färdig bilder finns på <a href="https://intranet.magello.se">intranätet</a> / Dokument / Bildbank / linkedin-banner.
+                <br />Färdig bilder finns på <a href="https://magellogroup.sharepoint.com/:f:/g/IgDzVgcRItgKQprzP6PIuMklAbGZs7nc8SNUWIAell4DoqY?e=ONkCgx">intranätet / Dokument / Bildbank / linkedin-banner</a>.
 
             </p>
 
