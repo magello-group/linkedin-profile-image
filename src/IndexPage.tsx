@@ -11,24 +11,35 @@ export default function IndexPage() {
                     <li style={{ marginBottom: '1.5rem' }}>
                         <strong><Link to="/profile">Ny profilbild</Link></strong><br />
                         Ger dig en Magello profilbild, svartvit och med rosa ton.
+                        <img src="https://magello.se/assets/images/profile-preview.png" alt="Exempel på profilbild"
+                            style={{ display: 'block', margin: '1rem auto', maxWidth: '100%', borderRadius: 8 }} />
                     </li>
                     <li style={{ marginBottom: '1.5rem' }}>
                         <strong><Link to="/linkedin-banner">Linkedin - Personlig top banner</Link></strong><br />
                         Ladda upp en miljöbild och få en banner med Magelloformgivning som du kan använda på din LinkedIn-profil.
+                        <img src="https://magello.se/assets/images/linkedin-header-preview.png" alt="Exempel på linkedin banner"
+                            style={{ display: 'block', margin: '1rem auto', maxWidth: '100%', borderRadius: 8 }} />
                     </li>
 
                     <li style={{ marginBottom: '1.5rem' }}>
                         <strong><Link to="/badge">Linkedin - Text på profilbild</Link></strong><br />
                         Lägg til en text på din Linkedin-profilbild. Ladda upp din profilbild, lägg till text och ladda ner resultatet.
+                        <img src="https://magello.se/assets/images/badge-preview.png" alt="Exempel på badgebild"
+                            style={{ display: 'block', margin: '1rem auto', maxWidth: '100%', borderRadius: 8 }} />
                     </li>
                     <li style={{ marginBottom: '1.5rem' }}>
                         <strong><Link to="/new-employee">LinkedIn - Bild för nyheter om anställd </Link></strong><br />
                         Generera en bild för LinkedIn-inlägg med valfri text, färg, rotation och överlägg. Anpassa bild och text fritt.
+                        <img src="https://magello.se/assets/images/new-employee-preview.png" alt="Exempel på bild för nyanställd"
+                            style={{ display: 'block', margin: '1rem auto', maxWidth: '100%', borderRadius: 8 }} />
+
                     </li>
                     <li style={{ marginBottom: '1.5rem' }}>
-                        <strong><Link to="/powerpoint">Powerpoint - Skapa milöbilder</Link></strong><br />
+                        <strong><Link to="/powerpoint">Powerpoint - Skapa svart-vita miljöbilder</Link></strong><br />
                         Generera en bilder till t ex Powerpoint eller genrellella bilder som ska se Magelloiga ut.
                         Ladda upp en färgild bild. Du kan flytta och skala bakgrundsbilden för att få det att se bra ut. Bilden laddas ner i 1080x1080px som passar LinkedIn-postning.
+                        <img src="https://magello.se/assets/images/powerpoint-preview.png" alt="Exempel på powerpointbild"
+                            style={{ display: 'block', margin: '1rem auto', maxWidth: '100%', borderRadius: 8 }} />
                     </li>
                 </ul>
                 <p style={{ color: '#888', fontSize: '0.95rem', marginTop: '2rem' }}>

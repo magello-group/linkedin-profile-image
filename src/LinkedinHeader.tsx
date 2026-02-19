@@ -90,8 +90,8 @@ function LinkedinHeader() {
                 ctx.globalCompositeOperation = previousOp
                 ctx.globalAlpha = previousAlpha
 
-                // Draw SVG overlay to cover the whole canvas
-                ctx.drawImage(svgOverlay, 0, 1, CANVAS_SIZE_WIDTH, CANVAS_SIZE_HEIGHT)
+                // Draw SVG overlay to cover the whole canvas plus 2 px and -1px to avoid edge artifacts from scaling
+                ctx.drawImage(svgOverlay, -1, 0, CANVAS_SIZE_WIDTH + 2, CANVAS_SIZE_HEIGHT)
 
                 console.log('Image drawn with scale', scale, 'and offset', imageOffset)
                 console.log('Image size:', img.width, 'x', img.height, 'scaled to', w, 'x', h)
@@ -194,8 +194,14 @@ function LinkedinHeader() {
     return (
         <div className="app">
             <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
-            <h1>LinkedIn - Nyanställd</h1>
-            <p className="description">Ladda upp en bild och skriv ett namn. Du kan skala och flytta bakgrundsbilden. Bilden laddas ner i 1080x1080px som passar LinkedIn-postning. Du kan även finjustera textens position. </p>
+            <h1>LinkedIn - Toppbanner</h1>
+            <p className="description">Ladda upp en bild och skriv ett namn. Du kan skala och flytta bakgrundsbilden. Bilden laddas ner i 1080x1080px som passar LinkedIn-postning. Du kan även finjustera textens position.
+                <br />
+                <br />Färdig bilder finns på <a href="https://intranet.magello.se">intranätet</a> / Dokument / Bildbank / linkedin-banner.
+
+            </p>
+
+
             <div className="controls">
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="file-input" />
                 <input type="text" value={text} onChange={e => setText(e.target.value)} placeholder="Ditt förnamn Efternamn" className="text-input" style={{ width: 220, marginLeft: 16 }} />
