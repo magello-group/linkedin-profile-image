@@ -89,7 +89,8 @@ export default function ProfileImage() {
         <div className="app">
             <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
             <h1>Magello profilbild</h1>
-            <p className="description">Ladda upp en bild så omvandlas den till gråskala. Du kan dra för att positionera bilden och zooma in upp till 300% med reglaget. Bilden laddas ner i 1080x1080px.</p>
+            <p className="description">Ta en bild med vit bakgrund, som ser ut som referensbilden nedan. Ladda upp en bilden så omvandlas den till gråskala och får lite rosa skimmer.
+                Du kan dra för att positionera bilden och zooma in upp till 300% med reglaget. Bilden laddas ner i 1080x1080px.</p>
             <div className="controls">
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="file-input" />
             </div>
