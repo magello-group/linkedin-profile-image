@@ -42,8 +42,18 @@ export default function IndexPage() {
                             style={{ display: 'block', margin: '1rem auto', maxWidth: '200px', borderRadius: 8 }} />
                     </li>
                     <li style={{ marginBottom: '1.5rem' }}>
-                        <strong><Link to="/svg-crop">SVG - Beskär till 200x200</Link></strong><br />
-                        Ladda upp en SVG-fil, flytta och skala den i förhandsgranskningen och ladda ner en ny SVG beskuren till exakt 200x200 px.
+                        <strong><Link to="/svg-crop">Skapa ikoner för uppdrag i CV</Link></strong><br />
+                        Ladda upp en logotyp som SVG, flytta och skala den i förhandsgranskningen och ladda ner en ny ikon beskuren till exakt 200x200 px, redo att användas för ett uppdrag i CV:t.
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center', margin: '1rem auto 0' }}>
+                            <img src="/valmyndigheten-preview.svg" alt="Exempel på ikon: Valmyndigheten"
+                                style={{ width: 80, height: 80, borderRadius: 8, border: '1px solid #eee' }} />
+                            <img src="/kth-preview.svg" alt="Exempel på ikon: KTH"
+                                style={{ width: 80, height: 80, borderRadius: 8, border: '1px solid #eee' }} />
+                            <img src="/ica-preview.svg" alt="Exempel på ikon: ICA"
+                                style={{ width: 80, height: 80, borderRadius: 8, border: '1px solid #eee' }} />
+                            <img src="/arbetsformedlingen-preview.svg" alt="Exempel på ikon: Arbetsförmedlingen"
+                                style={{ width: 80, height: 80, borderRadius: 8, border: '1px solid #eee' }} />
+                        </div>
                     </li>
                 </ul>
                 <p style={{ color: '#888', fontSize: '0.95rem', marginTop: '2rem' }}>

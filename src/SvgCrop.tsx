@@ -144,11 +144,27 @@ export default function SvgCrop() {
     return (
         <div className="app">
             <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
-            <h1>SVG - Beskär till 200x200</h1>
+            <h1>Skapa ikoner för uppdrag i CV</h1>
             <p className="description">
-                Ladda upp en SVG-fil. Du kan dra i förhandsgranskningen för att flytta bilden och använda reglaget för att zooma/skala den.
-                Resultatet laddas ner som en ny SVG-fil beskuren till exakt 200x200 px.
+                Ladda upp en logotyp som SVG-fil. Du kan dra i förhandsgranskningen för att flytta bilden och använda reglaget för att zooma/skala den.
+                Resultatet laddas ner som en ny SVG-ikon beskuren till exakt 200x200 px, redo att användas för ett uppdrag i CV:t.
+                Centrera bildens fokus på själva grafiken/symbolen och försök hålla eventuell text utanför det beskurna området, om inte texten är själva bilden (t.ex. en ordbild/logotyp där texten är poängen).
             </p>
+
+            <div style={{ marginBottom: '1.5rem' }}>
+                <p style={{ color: '#666', fontSize: '0.95rem', marginBottom: '0.5rem' }}>Exempel på färdiga ikoner:</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center' }}>
+                    <img src="/valmyndigheten-preview.svg" alt="Exempel på ikon: Valmyndigheten"
+                        style={{ width: 64, height: 64, borderRadius: 8, border: '1px solid #eee' }} />
+                    <img src="/kth-preview.svg" alt="Exempel på ikon: KTH"
+                        style={{ width: 64, height: 64, borderRadius: 8, border: '1px solid #eee' }} />
+                    <img src="/ica-preview.svg" alt="Exempel på ikon: ICA"
+                        style={{ width: 64, height: 64, borderRadius: 8, border: '1px solid #eee' }} />
+                    <img src="/arbetsformedlingen-preview.svg" alt="Exempel på ikon: Arbetsförmedlingen"
+                        style={{ width: 64, height: 64, borderRadius: 8, border: '1px solid #eee' }} />
+                </div>
+            </div>
+
             <div className="controls">
                 <input type="file" accept=".svg,image/svg+xml" onChange={handleFileUpload} className="file-input" />
             </div>
