@@ -41,6 +41,10 @@ export default function IndexPage() {
                         <img src="/powerpoint-preview.png" alt="Exempel på powerpointbild"
                             style={{ display: 'block', margin: '1rem auto', maxWidth: '200px', borderRadius: 8 }} />
                     </li>
+                    <li style={{ marginBottom: '1.5rem' }}>
+                        <strong><Link to="/svg-crop">SVG - Beskär till 200x200</Link></strong><br />
+                        Ladda upp en SVG-fil, flytta och skala den i förhandsgranskningen och ladda ner en ny SVG beskuren till exakt 200x200 px.
+                    </li>
                 </ul>
                 <p style={{ color: '#888', fontSize: '0.95rem', marginTop: '2rem' }}>
                     Alla tjänster körs lokalt i din webbläsare – ingen bilddata laddas upp till någon server.

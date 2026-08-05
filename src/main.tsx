@@ -8,6 +8,7 @@ import ProfileImage from './ProfileImage'
 import LinkedinHeader from './LinkedinHeader'
 import IndexPage from './IndexPage'
 import Powerpoint from './Powerpoint'
+import SvgCrop from './SvgCrop'
 
 const root = document.getElementById('root')
 if (root) {
@@ -21,6 +22,7 @@ if (root) {
           <Route path="/new-employee" element={<NewEmployee />} />
           <Route path="/profile" element={<ProfileImage />} />
           <Route path="/powerpoint" element={<Powerpoint />} />
+          <Route path="/svg-crop" element={<SvgCrop />} />
         </Routes>
       </BrowserRouter>
     </StrictMode>
