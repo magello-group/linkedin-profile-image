@@ -1,8 +1,22 @@
 import { useRef, useState, useEffect } from 'react'
 
-const fontFace = new FontFace('KattuxAbc', 'url(/KattuxAbc-Regular.otf)')
-
 const CANVAS_SIZE = 1080
+// Texten som användaren skriver in ritas med Roboto Regular (samma typsnitt som
+// laddas globalt via App.css). Vi väntar in document.fonts innan vi ritar på
+// canvas, annars kan webbläsaren hinna rita texten med en fallback-font.
+const TEXT_FONT_FAMILY = 'Roboto'
+// Rubriken på sidan använder Roboto Condensed Medium, laddas in separat nedan
+// eftersom den inte ingår i det globala Roboto-importet i App.css.
+const TITLE_FONT_FAMILY = "'Roboto Condensed', sans-serif"
+const GOOGLE_FONTS_TITLE_URL = 'https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@500&display=swap'
+
+function loadTitleFontStylesheet() {
+    if (document.querySelector(`link[href="${GOOGLE_FONTS_TITLE_URL}"]`)) return
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = GOOGLE_FONTS_TITLE_URL
+    document.head.appendChild(link)
+}
 
 function NewEmployee() {
     const [image, setImage] = useState<string | null>(null)
@@ -28,12 +42,19 @@ function NewEmployee() {
         setImageOffset({ x: 0, y: 0 })
     }, [image, scale])
 
-    // Load font
+    // Ladda in Roboto Regular innan vi ritar text på canvas
     useEffect(() => {
-        fontFace.load().then((loadedFont) => {
-            document.fonts.add(loadedFont)
-            setFontLoaded(true)
-        })
+        document.fonts.load(`400 16px ${TEXT_FONT_FAMILY}`)
+            .catch(() => {
+                // Om typsnittet inte kan laddas (t.ex. offline) ritar vi ändå,
+                // webbläsaren faller då tillbaka på en standardfont.
+            })
+            .finally(() => setFontLoaded(true))
+    }, [])
+
+    // Ladda in Roboto Condensed Medium för rubriken
+    useEffect(() => {
+        loadTitleFontStylesheet()
     }, [])
 
     // Load SVG overlay
@@ -69,17 +90,11 @@ function NewEmployee() {
                 // Draw text on top of SVG (styrd av x/y)
                 if (text) {
                     ctx.save()
-                    ctx.font = `${fontSize}px KattuxAbc`
-                    ctx.fillStyle = '#009EE3'
+                    ctx.font = `${fontSize}px ${TEXT_FONT_FAMILY}`
+                    ctx.fillStyle = '#000000'
                     ctx.textAlign = 'center'
                     ctx.textBaseline = 'middle'
-                    ctx.shadowColor = 'rgba(0,0,0,0.5)'
-                    ctx.shadowBlur = 2
-                    ctx.shadowOffsetX = 1
-                    ctx.shadowOffsetY = 1
-                    // Rotera -2 grader kring textens mittpunkt
                     ctx.translate(textX, textY)
-                    ctx.rotate(-2 * Math.PI / 180)
                     ctx.fillText(text, 0, 0)
                     ctx.restore()
                 }
@@ -90,17 +105,11 @@ function NewEmployee() {
             ctx.drawImage(svgOverlay, 0, 0, CANVAS_SIZE, CANVAS_SIZE)
             if (text) {
                 ctx.save()
-                ctx.font = `${fontSize}px KattuxAbc`
-                ctx.fillStyle = '#009EE3'
+                ctx.font = `${fontSize}px ${TEXT_FONT_FAMILY}`
+                ctx.fillStyle = '#000000'
                 ctx.textAlign = 'center'
                 ctx.textBaseline = 'middle'
-                ctx.shadowColor = 'rgba(0,0,0,0.5)'
-                ctx.shadowBlur = 2
-                ctx.shadowOffsetX = 1
-                ctx.shadowOffsetY = 1
-                // Rotera -2 grader kring textens mittpunkt
                 ctx.translate(textX, textY)
-                ctx.rotate(-2 * Math.PI / 180)
                 ctx.fillText(text, 0, 0)
                 ctx.restore()
             }
@@ -165,7 +174,7 @@ function NewEmployee() {
     return (
         <div className="app">
             <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
-            <h1>LinkedIn - Nyanställd</h1>
+            <h1 style={{ fontFamily: TITLE_FONT_FAMILY, fontWeight: 500 }}>Linkedininlägg för nyanställd</h1>
             <p className="description">Ladda upp en bild bild och skriv ett namn. Du kan skala och flytta bakgrundsbilden. Bilden laddas ner i 1080x1080px som passar LinkedIn-postning. Du kan även finjustera textens position. </p>
             <div className="controls">
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="file-input" />
