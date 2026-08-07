@@ -1,18 +1,6 @@
-import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 
-// Rubriken använder Roboto Condensed Medium, laddas in separat eftersom den
-// inte ingår i det globala Roboto-importet i App.css.
-const TITLE_FONT_FAMILY = "'Roboto Condensed', sans-serif"
-const GOOGLE_FONTS_TITLE_URL = 'https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@500&display=swap'
-
-function loadTitleFontStylesheet() {
-    if (document.querySelector(`link[href="${GOOGLE_FONTS_TITLE_URL}"]`)) return
-    const link = document.createElement('link')
-    link.rel = 'stylesheet'
-    link.href = GOOGLE_FONTS_TITLE_URL
-    document.head.appendChild(link)
-}
+// Rubriken (h1) stylas globalt via index.css/App.css med Roboto Condensed Medium.
 
 type Service = {
     to: string
@@ -73,16 +61,12 @@ const services: Service[] = [
 ]
 
 export default function IndexPage() {
-    useEffect(() => {
-        loadTitleFontStylesheet()
-    }, [])
-
     return (
         <>
             <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
             <div style={{ maxWidth: 1200, margin: '2rem auto', padding: '0 1.5rem' }}>
                 <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-                    <h1 style={{ fontFamily: TITLE_FONT_FAMILY, fontWeight: 500 }}>Magello bildhantering</h1>
+                    <h1>Magello bildhantering</h1>
                     <p style={{ color: '#555', fontSize: '1.1rem' }}>Välj en av tjänsterna nedan för att skapa eller redigera bilder, resultatet blir Magello riktiga bilder:</p>
                 </div>
 

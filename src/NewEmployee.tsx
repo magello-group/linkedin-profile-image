@@ -5,18 +5,7 @@ const CANVAS_SIZE = 1080
 // laddas globalt via App.css). Vi väntar in document.fonts innan vi ritar på
 // canvas, annars kan webbläsaren hinna rita texten med en fallback-font.
 const TEXT_FONT_FAMILY = 'Roboto'
-// Rubriken på sidan använder Roboto Condensed Medium, laddas in separat nedan
-// eftersom den inte ingår i det globala Roboto-importet i App.css.
-const TITLE_FONT_FAMILY = "'Roboto Condensed', sans-serif"
-const GOOGLE_FONTS_TITLE_URL = 'https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@500&display=swap'
-
-function loadTitleFontStylesheet() {
-    if (document.querySelector(`link[href="${GOOGLE_FONTS_TITLE_URL}"]`)) return
-    const link = document.createElement('link')
-    link.rel = 'stylesheet'
-    link.href = GOOGLE_FONTS_TITLE_URL
-    document.head.appendChild(link)
-}
+// Rubriken (h1) stylas globalt via index.css/App.css med Roboto Condensed Medium.
 
 function NewEmployee() {
     const [image, setImage] = useState<string | null>(null)
@@ -50,11 +39,6 @@ function NewEmployee() {
                 // webbläsaren faller då tillbaka på en standardfont.
             })
             .finally(() => setFontLoaded(true))
-    }, [])
-
-    // Ladda in Roboto Condensed Medium för rubriken
-    useEffect(() => {
-        loadTitleFontStylesheet()
     }, [])
 
     // Load SVG overlay
@@ -174,7 +158,7 @@ function NewEmployee() {
     return (
         <div className="app">
             <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
-            <h1 style={{ fontFamily: TITLE_FONT_FAMILY, fontWeight: 500 }}>Linkedininlägg för nyanställd</h1>
+            <h1>Linkedininlägg för nyanställd</h1>
             <p className="description">Ladda upp en bild bild och skriv ett namn. Du kan skala och flytta bakgrundsbilden. Bilden laddas ner i 1080x1080px som passar LinkedIn-postning. Du kan även finjustera textens position. </p>
             <div className="controls">
                 <input type="file" accept="image/*" onChange={handleImageUpload} className="file-input" />
