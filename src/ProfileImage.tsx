@@ -95,7 +95,8 @@ export default function ProfileImage() {
                 <DownloadButton onClick={handleDownload} />
             </>}
         >
-                <div style={{ flex: '1 1 260px', maxWidth: 540 }}>
+            <div className="mg-app-compare">
+                <div>
                     <canvas
                         ref={canvasRef}
                         width={CANVAS_SIZE}
@@ -143,8 +144,8 @@ export default function ProfileImage() {
                 <img
                     src="/profile-image-outlines.png"
                     alt="Referensbild som visar hur profilbilden ska vara beskuren"
-                    style={{ flex: '1 1 260px', maxWidth: 540, width: '100%', height: 'auto', background: '#fff' }}
                 />
+            </div>
         </ToolLayout>
     )
 }

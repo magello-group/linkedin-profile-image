@@ -10,9 +10,11 @@
 }
 
 /* ── Topbar ───────────────────────────────────────────────────── */
+/* Avviker från beslut 9 (mörk topbar #3D2535): topbaren är rosagrå och
+   bildar en yta tillsammans med signaturytan under, som headern på magello.se. */
 .mg-app-topbar {
-  background: #3D2535;
-  padding-block: 11px;
+  background: var(--mg-rose-100);
+  padding-block: var(--mg-space-5) 0;
 }
 .mg-app-topbar__inner {
   display: flex;
@@ -20,19 +22,19 @@
   gap: var(--mg-space-4);
 }
 .mg-app-topbar__logo img {
-  height: 28px;
+  height: 38px;
   width: auto;
 }
 .mg-app-topbar__title {
   font: 500 var(--mg-fs-small)/1 var(--mg-font-head);
   letter-spacing: .04em;
-  color: rgba(255, 255, 255, .65);
+  color: var(--mg-text-2);
 }
 .mg-app-topbar__back {
   margin-left: auto;
   font: 500 var(--mg-fs-small)/1 var(--mg-font-head);
   letter-spacing: .04em;
-  color: var(--mg-white);
+  color: var(--mg-black);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -110,6 +112,23 @@
   max-width: 100%;
   height: auto;
   background: var(--mg-white);
+}
+/* Två lika stora bilder bredvid varandra, t.ex. uppladdad bild och referensbild */
+.mg-app-compare {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--mg-space-5);
+}
+.mg-app-compare canvas,
+.mg-app-compare img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  background: var(--mg-white);
+}
+@media (max-width: 600px) {
+  .mg-app-compare { grid-template-columns: 1fr; }
 }
 .mg-app-placeholder {
   font-size: var(--mg-fs-small);
