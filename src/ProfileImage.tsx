@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
+import ToolLayout, { DownloadButton, RangeField, UploadZone, readAsDataUrl } from './ToolLayout'
 
 const CANVAS_SIZE = 1080
 
@@ -67,13 +68,8 @@ export default function ProfileImage() {
 
     // Ingen drag/scale-hantering längre
 
-    function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-        const file = e.target.files?.[0]
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = (ev) => setImage(ev.target?.result as string)
-            reader.readAsDataURL(file)
-        }
+    function handleImageUpload(file: File) {
+        readAsDataUrl(file, setImage)
     }
 
     function handleDownload() {
@@ -86,22 +82,25 @@ export default function ProfileImage() {
     }
 
     return (
-        <div className="app">
-            <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
-            <h1>Magello profilbild</h1>
-            <p className="description">Ta en bild med vit bakgrund, som ser ut som referensbilden nedan. Ladda upp en bilden så omvandlas den till gråskala och får lite rosa skimmer.
-                Du kan dra för att positionera bilden och zooma in upp till 300% med reglaget. Bilden laddas ner i 1080x1080px.</p>
-            <div className="controls">
-                <input type="file" accept="image/*" onChange={handleImageUpload} className="file-input" />
-            </div>
-            <div className="preview" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: '2rem', overflow: 'auto', minWidth: 0, flexWrap: 'nowrap' }}>
-                <div style={{ position: 'relative', display: 'inline-block', maxWidth: 540, minWidth: 0, flex: '1 1 0', width: '100%' }}>
+        <ToolLayout
+            kicker="Profilbild"
+            title="Magello profilbild"
+            intro={<>
+                Ta en bild med vit bakgrund, som ser ut som referensbilden nedan. Ladda upp bilden så omvandlas den till gråskala och får lite rosa skimmer.
+                Du kan dra för att positionera bilden och zooma in upp till 300% med reglaget. Bilden laddas ner i 1080x1080px.
+            </>}
+            controls={<>
+                <UploadZone label="Bild" accept="image/*" hint="JPG, PNG eller WEBP" onFile={handleImageUpload} />
+                <RangeField label="Zooma bild" valueLabel={`${Math.round(scale * 100)}%`} min={1} max={3} step={0.01} value={scale} onChange={setScale} />
+                <DownloadButton onClick={handleDownload} />
+            </>}
+        >
+                <div style={{ flex: '1 1 260px', maxWidth: 540 }}>
                     <canvas
                         ref={canvasRef}
                         width={CANVAS_SIZE}
                         height={CANVAS_SIZE}
-                        className="canvas"
-                        style={{ border: '1px solid #ccc', background: '#fff', width: '100%', boxSizing: 'border-box', cursor: draggingImage ? 'grabbing' : image ? 'grab' : 'default' }}
+                        style={{ width: '100%', cursor: draggingImage ? 'grabbing' : image ? 'grab' : 'default' }}
                         onMouseDown={(e) => {
                             if (!image) return
                             const rect = e.currentTarget.getBoundingClientRect()
@@ -140,37 +139,12 @@ export default function ProfileImage() {
                             setDragStart(null)
                         }}
                     />
-                    {/* overlay-div borttagen, overlay ritas nu via canvas */}
                 </div>
                 <img
                     src="/profile-image-outlines.png"
-                    alt="Profile image outlines"
-                    style={{ maxWidth: 540, minWidth: 0, flex: '1 1 0', width: '100%', height: 'auto', display: 'block', background: '#fff', border: '1px solid #ccc', boxSizing: 'border-box' }}
+                    alt="Referensbild som visar hur profilbilden ska vara beskuren"
+                    style={{ flex: '1 1 260px', maxWidth: 540, width: '100%', height: 'auto', background: '#fff' }}
                 />
-            </div>
-            <style>{`
-                @media (max-width: 1100px) {
-                    .preview { flex-wrap: wrap !important; }
-                }
-            `}</style>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center', marginTop: '1.5rem', alignItems: 'center' }}>
-                <label>
-                    Zooma bild
-                    <input type="range" min={1} max={3} step={0.01} value={scale} onChange={e => setScale(Number(e.target.value))} style={{ width: 160, marginLeft: 8 }} />
-                    <span style={{ marginLeft: 8 }}>{Math.round(scale * 100)}%</span>
-                </label>
-
-                {/* Blend-läge hårdkodat till 'color' i renderingen */}
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
-                <button onClick={handleDownload} className="download-button" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ verticalAlign: 'middle', marginRight: 8 }}>
-                        <path d="M10 2v10m0 0l-4-4m4 4l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        <rect x="4" y="16" width="12" height="2" rx="1" fill="currentColor" />
-                    </svg>
-                    Ladda ner bild
-                </button>
-            </div>
-        </div>
+        </ToolLayout>
     )
 }

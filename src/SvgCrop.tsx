@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
+import ToolLayout, { DownloadButton, RangeField, UploadZone } from './ToolLayout'
 
 // Storleken (i px) på den slutgiltiga beskurna SVG-filen
 const CROP_SIZE = 200
@@ -88,9 +89,7 @@ export default function SvgCrop() {
     const cropOffsetX = (CROP_SIZE - drawWidth) / 2 + offset.x
     const cropOffsetY = (CROP_SIZE - drawHeight) / 2 + offset.y
 
-    function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
-        const file = e.target.files?.[0]
-        if (!file) return
+    function handleFileUpload(file: File) {
         setFileName(file.name.replace(/\.svg$/i, ''))
         const reader = new FileReader()
         reader.onload = (ev) => {
@@ -141,50 +140,55 @@ export default function SvgCrop() {
         URL.revokeObjectURL(url)
     }
 
+    const nudgeStyle = { padding: '6px 10px', fontSize: '1rem' }
+
     return (
-        <div className="app">
-            <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
-            <h1>Skapa ikoner för uppdrag i CV</h1>
-            <p className="description">
+        <ToolLayout
+            kicker="CV"
+            title="Skapa ikoner för uppdrag i CV"
+            intro={<>
                 Ladda upp en logotyp som SVG-fil. Du kan dra i förhandsgranskningen för att flytta bilden och använda reglaget för att zooma/skala den.
                 Resultatet laddas ner som en ny SVG-ikon beskuren till exakt 200x200 px, redo att användas för ett uppdrag i CV:t.
                 Centrera bildens fokus på själva grafiken/symbolen och försök hålla eventuell text utanför det beskurna området, om inte texten är själva bilden (t.ex. en ordbild/logotyp där texten är poängen).
-            </p>
-
-            <div style={{ marginBottom: '1.5rem' }}>
-                <p style={{ color: '#666', fontSize: '0.95rem', marginBottom: '0.5rem' }}>Exempel på färdiga ikoner:</p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', justifyContent: 'center' }}>
-                    <img src="/valmyndigheten-preview.svg" alt="Exempel på ikon: Valmyndigheten"
-                        style={{ width: 64, height: 64, borderRadius: 8, border: '1px solid #eee' }} />
-                    <img src="/kth-preview.svg" alt="Exempel på ikon: KTH"
-                        style={{ width: 64, height: 64, borderRadius: 8, border: '1px solid #eee' }} />
-                    <img src="/ica-preview.svg" alt="Exempel på ikon: ICA"
-                        style={{ width: 64, height: 64, borderRadius: 8, border: '1px solid #eee' }} />
-                    <img src="/arbetsformedlingen-preview.svg" alt="Exempel på ikon: Arbetsförmedlingen"
-                        style={{ width: 64, height: 64, borderRadius: 8, border: '1px solid #eee' }} />
+            </>}
+            controls={<>
+                <UploadZone label="Logotyp" accept=".svg,image/svg+xml" hint="SVG-fil" onFile={handleFileUpload} />
+                <RangeField
+                    label="Skala bild"
+                    valueLabel={`${Math.round(scale * 100)}%`}
+                    min={SCALE_MIN}
+                    max={SCALE_MAX}
+                    step={SCALE_STEP}
+                    value={scale}
+                    onChange={setScale}
+                    before={<button type="button" className="mg-btn mg-btn--secondary" style={nudgeStyle} onClick={() => nudgeScale(-SCALE_NUDGE)} aria-label="Minska skala">−</button>}
+                    after={<button type="button" className="mg-btn mg-btn--secondary" style={nudgeStyle} onClick={() => nudgeScale(SCALE_NUDGE)} aria-label="Öka skala">+</button>}
+                />
+                <DownloadButton onClick={handleDownload} disabled={!svgText}>Ladda ner SVG (200x200)</DownloadButton>
+                <div className="mg-field">
+                    <span className="mg-field__label">Exempel på färdiga ikoner</span>
+                    <div className="mg-app-thumbs">
+                        <img src="/valmyndigheten-preview.svg" alt="Exempel på ikon: Valmyndigheten" />
+                        <img src="/kth-preview.svg" alt="Exempel på ikon: KTH" />
+                        <img src="/ica-preview.svg" alt="Exempel på ikon: ICA" />
+                        <img src="/arbetsformedlingen-preview.svg" alt="Exempel på ikon: Arbetsförmedlingen" />
+                    </div>
                 </div>
-            </div>
-
-            <div className="controls">
-                <input type="file" accept=".svg,image/svg+xml" onChange={handleFileUpload} className="file-input" />
-            </div>
-
-            <div className="preview" style={{ minHeight: DISPLAY_SIZE + 60 }}>
+            </>}
+        >
                 {svgText && dataUrl ? (
-                    <>
                         <div
                             ref={containerRef}
                             style={{
                                 position: 'relative',
                                 width: DISPLAY_SIZE,
                                 height: DISPLAY_SIZE,
+                                flexShrink: 0,
                                 overflow: 'hidden',
                                 background: '#fff',
-                                border: '1px solid #ccc',
-                                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                                 cursor: dragging ? 'grabbing' : 'grab',
                                 backgroundImage:
-                                    'linear-gradient(45deg, #eee 25%, transparent 25%), linear-gradient(-45deg, #eee 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #eee 75%), linear-gradient(-45deg, transparent 75%, #eee 75%)',
+                                    'linear-gradient(45deg, var(--mg-rose-100) 25%, transparent 25%), linear-gradient(-45deg, var(--mg-rose-100) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, var(--mg-rose-100) 75%), linear-gradient(-45deg, transparent 75%, var(--mg-rose-100) 75%)',
                                 backgroundSize: '20px 20px',
                                 backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
                             }}
@@ -208,51 +212,9 @@ export default function SvgCrop() {
                                 }}
                             />
                         </div>
-
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center', marginTop: '1rem', alignItems: 'center' }}>
-                            <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                Skala bild
-                                <button
-                                    type="button"
-                                    onClick={() => nudgeScale(-SCALE_NUDGE)}
-                                    aria-label="Minska skala"
-                                    style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #ccc', background: '#fafafa', cursor: 'pointer', fontSize: '1.1rem', lineHeight: 1, padding: 0 }}
-                                >
-                                    −
-                                </button>
-                                <input
-                                    type="range"
-                                    min={SCALE_MIN}
-                                    max={SCALE_MAX}
-                                    step={SCALE_STEP}
-                                    value={scale}
-                                    onChange={e => setScale(Number(e.target.value))}
-                                    style={{ width: 160 }}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => nudgeScale(SCALE_NUDGE)}
-                                    aria-label="Öka skala"
-                                    style={{ width: 28, height: 28, borderRadius: 6, border: '1px solid #ccc', background: '#fafafa', cursor: 'pointer', fontSize: '1.1rem', lineHeight: 1, padding: 0 }}
-                                >
-                                    +
-                                </button>
-                                <span>{Math.round(scale * 100)}%</span>
-                            </label>
-                        </div>
-
-                        <button onClick={handleDownload} className="download-button" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ verticalAlign: 'middle', marginRight: 8 }}>
-                                <path d="M10 2v10m0 0l-4-4m4 4l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                <rect x="4" y="16" width="12" height="2" rx="1" fill="currentColor" />
-                            </svg>
-                            Ladda ner SVG (200x200)
-                        </button>
-                    </>
                 ) : (
-                    <p className="placeholder">Ladda upp en SVG-fil för att se förhandsvisning</p>
+                    <p className="mg-app-placeholder">Ladda upp en SVG-fil för att se förhandsvisning</p>
                 )}
-            </div>
-        </div>
+        </ToolLayout>
     )
 }

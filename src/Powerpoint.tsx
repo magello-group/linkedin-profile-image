@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
+import ToolLayout, { DownloadButton, RangeField, UploadZone, readAsDataUrl } from './ToolLayout'
 
 
 const CANVAS_SIZE_WIDTH = 1920
@@ -121,13 +122,8 @@ function Powerpoint() {
         setDragStart(null)
     }
 
-    function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-        const file = e.target.files?.[0]
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = (ev) => setImage(ev.target?.result as string)
-            reader.readAsDataURL(file)
-        }
+    function handleImageUpload(file: File) {
+        readAsDataUrl(file, setImage)
     }
 
     function handleDownload() {
@@ -140,43 +136,27 @@ function Powerpoint() {
     }
 
     return (
-        <div className="app">
-            <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
-            <h1>Powerpoint</h1>
-            <p className="description">Ladda upp en bild. Du kan skala och flytta bakgrundsbilden.</p>
-            <div className="controls">
-                <input type="file" accept="image/*" onChange={handleImageUpload} className="file-input" />
-            </div>
-            <div className="preview">
-                <canvas
-                    ref={canvasRef}
-                    width={CANVAS_SIZE_WIDTH}
-                    height={CANVAS_SIZE_HEIGHT}
-                    className="canvas"
-                    style={{ border: '0px solid #fff', background: '#fff', maxWidth: 1920, width: '100%', maxHeight: 1080, cursor: draggingImage ? 'grabbing' : image ? 'grab' : 'default' }}
-                    onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={handleMouseUp}
-                    onMouseLeave={handleMouseUp}
-                />
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center', marginTop: '1.5rem', alignItems: 'center' }}>
-                <label>
-                    Skala bild
-                    <input type="range" min={0.2} max={2} step={0.01} value={scale} onChange={e => setScale(Number(e.target.value))} style={{ width: 120, marginLeft: 8 }} />
-                    <span style={{ marginLeft: 8 }}>{Math.round(scale * 100)}%</span>
-                </label>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
-                <button onClick={handleDownload} className="download-button" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ verticalAlign: 'middle', marginRight: 8 }}>
-                        <path d="M10 2v10m0 0l-4-4m4 4l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        <rect x="4" y="16" width="12" height="2" rx="1" fill="currentColor" />
-                    </svg>
-                    Ladda ner bild
-                </button>
-            </div>
-        </div>
+        <ToolLayout
+            kicker="PowerPoint"
+            title="Powerpoint"
+            intro="Ladda upp en bild. Du kan skala och flytta bakgrundsbilden."
+            controls={<>
+                <UploadZone label="Bild" accept="image/*" hint="JPG, PNG eller WEBP" onFile={handleImageUpload} />
+                <RangeField label="Skala bild" valueLabel={`${Math.round(scale * 100)}%`} min={0.2} max={2} step={0.01} value={scale} onChange={setScale} />
+                <DownloadButton onClick={handleDownload} />
+            </>}
+        >
+            <canvas
+                ref={canvasRef}
+                width={CANVAS_SIZE_WIDTH}
+                height={CANVAS_SIZE_HEIGHT}
+                style={{ width: '100%', maxWidth: CANVAS_SIZE_WIDTH, cursor: draggingImage ? 'grabbing' : image ? 'grab' : 'default' }}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+            />
+        </ToolLayout>
     )
 }
 

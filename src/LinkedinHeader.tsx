@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
+import ToolLayout, { DownloadButton, RangeField, TextField, UploadZone, readAsDataUrl } from './ToolLayout'
 
 const fontFace = new FontFace('KattuxAbc', 'url(/KattuxAbc-Regular.otf)')
 
@@ -173,13 +174,8 @@ function LinkedinHeader() {
         setDragStart(null)
     }
 
-    function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-        const file = e.target.files?.[0]
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = (ev) => setImage(ev.target?.result as string)
-            reader.readAsDataURL(file)
-        }
+    function handleImageUpload(file: File) {
+        readAsDataUrl(file, setImage)
     }
 
     function handleDownload() {
@@ -192,65 +188,34 @@ function LinkedinHeader() {
     }
 
     return (
-        <div className="app">
-            <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
-            <h1>LinkedIn - Toppbanner</h1>
-            <p className="description">Ladda upp en bild (och skriv en text). Du kan skala och flytta (bakgrundsbilden. Bilden laddas ner i 1584x396px som passar LinkedIn. Du kan även finjustera eventuell texts position.
-                <br />
-                <br />Färdig bilder finns på <a href="https://magellogroup.sharepoint.com/:f:/g/IgDzVgcRItgKQprzP6PIuMklAbGZs7nc8SNUWIAell4DoqY?e=ONkCgx">intranätet / Dokument / Bildbank / linkedin-banner</a>.
-
-            </p>
-
-
-            <div className="controls">
-                <input type="file" accept="image/*" onChange={handleImageUpload} className="file-input" />
-                <input type="text" value={text} onChange={e => setText(e.target.value)} placeholder="Ditt förnamn Efternamn" className="text-input" style={{ width: 220, marginLeft: 16 }} />
-            </div>
-            <div className="preview">
-                <canvas
-                    ref={canvasRef}
-                    width={CANVAS_SIZE_WIDTH}
-                    height={CANVAS_SIZE_HEIGHT}
-                    className="canvas"
-                    style={{ border: '0px solid #fff', background: '#fff', maxWidth: 1584, width: '100%', maxHeight: 396, cursor: draggingImage ? 'grabbing' : image ? 'grab' : 'default' }}
-                    onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={handleMouseUp}
-                    onMouseLeave={handleMouseUp}
-                />
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center', marginTop: '1.5rem', alignItems: 'center' }}>
-                <label>
-                    Skala bild
-                    <input type="range" min={0.2} max={2} step={0.01} value={scale} onChange={e => setScale(Number(e.target.value))} style={{ width: 120, marginLeft: 8 }} />
-                    <span style={{ marginLeft: 8 }}>{Math.round(scale * 100)}%</span>
-                </label>
-                <label>
-                    Textstorlek
-                    <input type="range" min={40} max={200} step={1} value={fontSize} onChange={e => setFontSize(Number(e.target.value))} style={{ width: 120, marginLeft: 8 }} />
-                    <span style={{ marginLeft: 8 }}>{fontSize}px</span>
-                </label>
-                <label>
-                    Text X
-                    <input type="range" min={0} max={CANVAS_SIZE_WIDTH} step={1} value={textX} onChange={e => setTextX(Number(e.target.value))} style={{ width: 120, marginLeft: 8 }} />
-                    <span style={{ marginLeft: 8 }}>{textX}</span>
-                </label>
-                <label>
-                    Text Y
-                    <input type="range" min={0} max={CANVAS_SIZE_WIDTH} step={1} value={textY} onChange={e => setTextY(Number(e.target.value))} style={{ width: 120, marginLeft: 8 }} />
-                    <span style={{ marginLeft: 8 }}>{textY}</span>
-                </label>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.5rem' }}>
-                <button onClick={handleDownload} className="download-button" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ verticalAlign: 'middle', marginRight: 8 }}>
-                        <path d="M10 2v10m0 0l-4-4m4 4l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        <rect x="4" y="16" width="12" height="2" rx="1" fill="currentColor" />
-                    </svg>
-                    Ladda ner bild
-                </button>
-            </div>
-        </div>
+        <ToolLayout
+            kicker="LinkedIn"
+            title="LinkedIn - Toppbanner"
+            intro={<>
+                Ladda upp en bild (och skriv en text). Du kan skala och flytta bakgrundsbilden. Bilden laddas ner i 1584x396px som passar LinkedIn. Du kan även finjustera eventuell texts position.
+                {' '}Färdiga bilder finns på <a href="https://magellogroup.sharepoint.com/:f:/g/IgDzVgcRItgKQprzP6PIuMklAbGZs7nc8SNUWIAell4DoqY?e=ONkCgx">intranätet / Dokument / Bildbank / linkedin-banner</a>.
+            </>}
+            controls={<>
+                <UploadZone label="Bakgrundsbild" accept="image/*" hint="JPG, PNG eller WEBP" onFile={handleImageUpload} />
+                <TextField label="Text" value={text} onChange={setText} placeholder="Ditt förnamn Efternamn" />
+                <RangeField label="Skala bild" valueLabel={`${Math.round(scale * 100)}%`} min={0.2} max={2} step={0.01} value={scale} onChange={setScale} />
+                <RangeField label="Textstorlek" valueLabel={`${fontSize}px`} min={40} max={200} step={1} value={fontSize} onChange={setFontSize} />
+                <RangeField label="Text X" valueLabel={`${textX}`} min={0} max={CANVAS_SIZE_WIDTH} step={1} value={textX} onChange={setTextX} />
+                <RangeField label="Text Y" valueLabel={`${textY}`} min={0} max={CANVAS_SIZE_WIDTH} step={1} value={textY} onChange={setTextY} />
+                <DownloadButton onClick={handleDownload} />
+            </>}
+        >
+            <canvas
+                ref={canvasRef}
+                width={CANVAS_SIZE_WIDTH}
+                height={CANVAS_SIZE_HEIGHT}
+                style={{ width: '100%', maxWidth: CANVAS_SIZE_WIDTH, cursor: draggingImage ? 'grabbing' : image ? 'grab' : 'default' }}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseUp}
+            />
+        </ToolLayout>
     )
 }
 

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import './App.css'
+import ToolLayout, { DownloadButton, RangeField, TextField, UploadZone, readAsDataUrl } from './ToolLayout'
 
 // Define the font face
 const fontFace = new FontFace('KattuxAbc', 'url(/KattuxAbc-Regular.otf)')
@@ -90,16 +90,7 @@ function App() {
     }
   }, [image, text, position, bgImage, fontLoaded, fontSizeScale])
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setImage(e.target?.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
+  const handleImageUpload = (file: File) => readAsDataUrl(file, setImage)
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     setIsDragging(true)
@@ -128,87 +119,52 @@ function App() {
     }
   }
 
-  return (
-    <div className="app">
-      <img src="https://magello.se/assets/images/magello-logo-w.svg" alt="Magello logotyp" className="magello-logo" style={{ display: 'block', margin: '2rem auto 1rem auto', maxWidth: 180 }} />
-      <h1>LinkedIn - Text på profilbild</h1>
+  const presets = ['Anställer!', 'Tillgänglig!', 'Fullstack', 'Konsult']
 
-      <p className="description">
+  return (
+    <ToolLayout
+      kicker="LinkedIn"
+      title="LinkedIn - Text på profilbild"
+      intro={<>
         Ladda upp din profilbild och lägg till text som kommer att visas överlagrad på bilden.
         Du kan dra texten för att positionera den precis där du vill ha den.
-      </p>
-      <div className="controls">
-        <div className="control">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="file-input"
-          />
-        </div>
-        <div className="control">
-          <input
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="Ange text här..."
-            className="text-input"
-            style={{ height: '2.5rem', minHeight: 'unset', maxHeight: 'unset', resize: 'none' }}
-          />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', justifyContent: 'center' }}>
-            <span style={{ fontSize: '0.95rem', color: '#666', marginBottom: 2 }}>Standardtexter (förslag):</span>
-            <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', marginTop: 2 }}>
-              <button type="button" style={{ fontSize: '0.85rem', padding: '0.25rem 0.7rem', borderRadius: 6, border: '1px solid #ccc', background: '#fafafa', cursor: 'pointer' }} onClick={() => setText('Anställer!')}>Anställer!</button>
-              <button type="button" style={{ fontSize: '0.85rem', padding: '0.25rem 0.7rem', borderRadius: 6, border: '1px solid #ccc', background: '#fafafa', cursor: 'pointer' }} onClick={() => setText('Tillgänglig!')}>Tillgänglig!</button>
-              <button type="button" style={{ fontSize: '0.85rem', padding: '0.25rem 0.7rem', borderRadius: 6, border: '1px solid #ccc', background: '#fafafa', cursor: 'pointer' }} onClick={() => setText('Fullstack')}>Fullstack</button>
-              <button type="button" style={{ fontSize: '0.85rem', padding: '0.25rem 0.7rem', borderRadius: 6, border: '1px solid #ccc', background: '#fafafa', cursor: 'pointer' }} onClick={() => setText('Konsult')}>Konsult</button>
-            </div>
+      </>}
+      controls={<>
+        <UploadZone label="Profilbild" accept="image/*" hint="JPG, PNG eller WEBP" onFile={handleImageUpload} />
+        <TextField label="Text" value={text} onChange={setText} placeholder="Ange text här..." />
+        <div className="mg-field">
+          <span className="mg-field__label">Standardtexter (förslag)</span>
+          <div className="mg-app-chips">
+            {presets.map(preset => (
+              <button key={preset} type="button" className="mg-btn mg-btn--secondary" onClick={() => setText(preset)}>{preset}</button>
+            ))}
           </div>
         </div>
-      </div>
-      <div className="preview">
-        {image ? (
-          <>
-            <canvas
-              ref={canvasRef}
-              className="canvas"
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseLeave={handleMouseUp}
-            />
-            <button
-              onClick={handleDownload}
-              className="download-button"
-              disabled={!image || !text}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ verticalAlign: 'middle', marginRight: 8 }}>
-                <path d="M10 2v10m0 0l-4-4m4 4l4-4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <rect x="4" y="16" width="12" height="2" rx="1" fill="currentColor" />
-              </svg>
-              Ladda ner bild
-            </button>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 16, justifyContent: 'center' }}>
-              <label htmlFor="fontSizeRange">Textstorlek</label>
-              <input
-                id="fontSizeRange"
-                type="range"
-                min={0.3}
-                max={1.5}
-                step={0.01}
-                value={fontSizeScale}
-                onChange={e => setFontSizeScale(Number(e.target.value))}
-                style={{ width: 100 }}
-              />
-              <span style={{ minWidth: 32, textAlign: 'right' }}>{Math.round(fontSizeScale * 100)}%</span>
-            </div>
-          </>
-        ) : (
-          <p className="placeholder">Ladda upp en bild för att se förhandsvisning</p>
-        )}
-      </div>
-    </div>
-
+        <RangeField
+          label="Textstorlek"
+          valueLabel={`${Math.round(fontSizeScale * 100)}%`}
+          min={0.3}
+          max={1.5}
+          step={0.01}
+          value={fontSizeScale}
+          onChange={setFontSizeScale}
+        />
+        <DownloadButton onClick={handleDownload} disabled={!image || !text} />
+      </>}
+    >
+      {image ? (
+        <canvas
+          ref={canvasRef}
+          style={{ width: '100%', maxWidth: 560, cursor: 'move' }}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        />
+      ) : (
+        <p className="mg-app-placeholder">Ladda upp en bild för att se förhandsvisning</p>
+      )}
+    </ToolLayout>
   )
 }
 
