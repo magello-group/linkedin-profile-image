@@ -207,6 +207,7 @@ export default function SvgCrop() {
                                     top: cropOffsetY * DISPLAY_SCALE,
                                     width: drawWidth * DISPLAY_SCALE,
                                     height: drawHeight * DISPLAY_SCALE,
+                                    maxWidth: 'none',
                                     userSelect: 'none',
                                     pointerEvents: 'none',
                                 }}
