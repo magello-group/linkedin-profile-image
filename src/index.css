@@ -119,12 +119,16 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--mg-space-5);
+  align-items: start;
 }
+.mg-app-compare > div { min-width: 0; }
 .mg-app-compare canvas,
 .mg-app-compare img {
+  display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 1;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
   background: var(--mg-white);
 }
 @media (max-width: 600px) {

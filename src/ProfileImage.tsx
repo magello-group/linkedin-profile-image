@@ -141,10 +141,12 @@ export default function ProfileImage() {
                         }}
                     />
                 </div>
-                <img
-                    src="/profile-image-outlines.png"
-                    alt="Referensbild som visar hur profilbilden ska vara beskuren"
-                />
+                <div>
+                    <img
+                        src="/profile-image-outlines.png"
+                        alt="Referensbild som visar hur profilbilden ska vara beskuren"
+                    />
+                </div>
             </div>
         </ToolLayout>
     )

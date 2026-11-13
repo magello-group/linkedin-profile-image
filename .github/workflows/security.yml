@@ -1,0 +1,53 @@
+name: Säkerhetskoll
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    # Varje måndag 06:00 UTC, så att nya sårbarheter upptäcks även utan kodändringar
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dependencies:
+    name: Beroenden (npm audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      # npm audit läser package-lock.json, ingen installation behövs.
+      # Bygget stoppas vid höga och kritiska sårbarheter i alla beroenden.
+      - name: Kontrollera kända sårbarheter
+        run: npm audit --audit-level=high
+
+  codeql:
+    name: Kodanalys (CodeQL)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript, actions]
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-extended
+
+      - uses: github/codeql-action/analyze@v4
+        with:
+          category: /language:${{ matrix.language }}
